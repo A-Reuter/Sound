@@ -1,0 +1,76 @@
+.help-page {
+    margin-top: 22px;
+    margin-left: 30px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    min-width: 550px;
+    /* max-width: 1500px; */
+    /* font-family: Roboto; */
+}
+
+.margin {
+    margin-left: 10px;
+}
+
+h2 {
+    margin-top: 22px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    margin-top: 30px;
+}
+
+li {
+    margin-left: 15px;
+    text-indent: 10px hanging;
+    list-style-type: circle;
+}
+
+li.brackets {
+    text-indent: 20px hanging;
+}
+
+li.head {
+    margin-left: -20px;
+    list-style-type: none;
+}
+
+li.inner {
+    margin-left: 10px;
+    text-indent: 35px hanging;
+    list-style-type: none;
+}
+
+li.roman-l {
+    margin-left: -20px;
+    text-indent: 59px hanging;
+    list-style-type: none;
+}
+
+li.roman-s {
+    margin-left: -20px;
+    text-indent: 51px hanging;
+    list-style-type: none;
+}
+
+li.src {
+    margin-left: -12px;
+    list-style-type: none;
+    font-style: italic;
+}
+
+span.formula {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: Georgia;
+}
+
+span.numeral {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+ul.inner {
+    margin-top: 0px;
+}

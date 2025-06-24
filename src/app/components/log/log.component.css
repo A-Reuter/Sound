@@ -1,0 +1,22 @@
+.header {
+    font-family: Roboto;
+    color: darkgrey;
+    margin-top: 2px;
+    margin-left: 16px;
+    margin-bottom: 4px;
+}
+
+.log {
+    width: 100%;
+    min-height: 60px;
+    max-height: 400px;
+    margin-bottom: 25px;
+    border-width: medium;
+    border-style: dotted;
+    border-color: lightgrey;
+    overflow: scroll;
+}
+
+/* .log:hover {
+    border-color: darkgrey;
+} */

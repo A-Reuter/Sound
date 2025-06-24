@@ -1,0 +1,12 @@
+<div [matTooltip]="tooltip">
+    <button mat-fab 
+            class="button" 
+            [disabled]="disabled" 
+            (click)="processMouseClick()">
+        @if (showPause) {
+            <mat-icon>pause</mat-icon>
+        } @else {
+            <mat-icon>play_arrow</mat-icon>
+        }
+    </button>
+</div>

@@ -1,5 +1,5 @@
 export type CssColorName =
-  | 'AliceBlue'
+  ( 'AliceBlue'
   | 'AntiqueWhite'
   | 'Aqua'
   | 'Aquamarine'
@@ -146,4 +146,4 @@ export type CssColorName =
   | 'White'
   | 'WhiteSmoke'
   | 'Yellow'
-  | 'YellowGreen';
+  | 'YellowGreen' );

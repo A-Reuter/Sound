@@ -1,0 +1,89 @@
+<div class="help-page">
+    <h2>Settings</h2>
+    <div class="margin">
+        <h3>Display</h3>
+        <div class="margin">
+            <h4>Modes</h4>
+            <ul class="indent-105">
+                <li class="no-icon"><span class="highlight">default&nbsp;</span> - highlights net elements most relevant when executing firing sequences: source places, sink places and enabled transitions</li>
+                <li class="no-icon"><span class="highlight">traveled</span> - highlights all parts of the net previously traveled across: differentiates between elements present within completed steps of the active sequence, elements present within future steps of the active sequence ald elements present within the sequence log</li>
+                <li class="no-icon"><span class="highlight">errors&nbsp;&nbsp;</span> - highlights parts of the net that are directly or indirectly tied to the invalidity of a net marking</li>
+            </ul>
+            <h4>Triggered Mode Switching</h4>
+            <ul class="indent-145">
+                <li class="no-icon"><span class="highlight">on error&nbsp;&nbsp;&nbsp;&nbsp;</span> - while enabled, the display mode is automatically switched to the <i>errors</i> setting when an invalid marking is encountered</li>
+                <li class="no-icon"><span class="highlight">on file load</span> - while enabled, the display mode is automatically switched to the <i>default</i> setting when a new file is loaded</li>
+                <li class="no-icon"><span class="highlight">on log load&nbsp;</span> - while enabled, the display mode is automatically switched to the <i>traveled</i> setting when a log sequence is loaded</li>
+                <li class="no-icon"><span class="highlight">on autorun&nbsp;&nbsp;</span> - while enabled, the display mode is automatically switched to the <i>traveled</i> setting when the automated firing sequence execution is enabled</li>
+            </ul>
+        </div>
+        <h3>Spring Embedder</h3>
+        <div class="margin">
+            <h4>Exempt Dragged Nodes</h4>
+            <div class="margin">
+                <p style="margin-bottom:10px;">while enabled, the spring embedder applies no forces to a dragged node, resulting in an unimpeded drag</p>
+                <p style="margin-top:10px;">while disabled, the spring embedder applies forces to a dragged node in the same way forces are applied to all other nodes, sacrificing drag responsiveness for more consistent node arrangement</p>
+            </div>
+            <h4>Node Tethering</h4>
+            <div class="margin">
+                <p style="margin-bottom:7px;">controls the degree to which the nodes of a petri net are tethered together by the spring embedder algorithm</p>
+                <ul class="indent-105">
+                    <li class="no-icon"><span class="highlight">loose&nbsp;&nbsp;&nbsp;</span> - nodes are only loosely tethered together, allowing for a high degree of positioning flexibility</li>
+                    <li class="no-icon"><span class="highlight">balanced</span> - nodes are moderately tethered together, allowing for a mostly sufficient degree of positioning flexibility</li>
+                    <li class="no-icon"><span class="highlight">tight&nbsp;&nbsp;&nbsp;</span> - nodes are more tightly tethered together, allowing only for a limited degree of positioning flexibility</li>
+                </ul>
+            </div>
+        </div>
+        <h3>Sequence Automation</h3>
+        <div class="margin">
+            <h4>Iteration Delay</h4>
+            <div class="margin">
+                <p style="margin-bottom:10px;">controls the amount of time the automated firing sequence execution idles after each firing action before executing the next</p>
+                <p class="brackets">(effectively equates to the frequency with which firing sequences are executed)</p>
+            </div>
+        </div>
+        <h3>Workflow Checks</h3>
+        <div class="margin">
+            <h4>Use Narrow Definition</h4>
+            <div class="margin">
+                <p>applies a more narrow class definition when checking whether a given petri net is a workflow net: while enabled, in addition to the default set of checks directly pertaining to the formal workflow net definition, only arc weights up to 1 will be allowed</p>
+            </div>
+        </div>
+        <h3>Example Files</h3>
+        <div class="margin">
+            <p>when enabled, three example files will be displayed leftmost within the control bar above the canvas</p>
+        </div>
+        <h3>Notifications</h3>
+        <div class="margin">
+            <h4>On Application Malfunction</h4>
+            <div class="margin">
+                <p style="margin-bottom:7px;">controls the way the user is notified about the occurrence of any expected, yet unsolvable software malfunction</p>
+                <ul class="indent-85">
+                    <li class="no-icon"><span class="highlight">dialog</span> - displays a dialog window</li>
+                    <li class="no-icon"><span class="highlight">popup&nbsp;</span> - displays a popup window</li>
+                    <li class="no-icon"><span class="highlight">toast&nbsp;</span> - displays a toast message</li>
+                </ul>
+            </div>
+            <h4>For Confirmation</h4>
+            <div class="margin">
+                <p style="margin-bottom:7px;">controls the way the user is approached to confirm an action</p>
+                <ul class="indent-85">
+                    <li class="no-icon"><span class="highlight">dialog</span> - displays a dialog window</li>
+                    <li class="no-icon"><span class="highlight">popup&nbsp;</span> - displays a popup window</li>
+                    <li class="no-icon"><span class="highlight">auto&nbsp;&nbsp;</span> - displays no window, automatically confirming to proceed with the action</li>
+                </ul>
+            </div>
+            <h4>For Information</h4>
+            <div class="margin">
+                <p style="margin-bottom:7px;">controls the way the user is presented important information</p>
+                <ul class="indent-85">
+                    <li class="no-icon"><span class="highlight">dialog</span> - displays a dialog window</li>
+                    <li class="no-icon"><span class="highlight">popup&nbsp;</span> - displays a popup window</li>
+                    <li class="no-icon"><span class="highlight">toast&nbsp;</span> - displays a toast message</li>
+                    <li class="no-icon"><span class="highlight">none&nbsp;&nbsp;</span> - displays no info</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br/>
+</div>

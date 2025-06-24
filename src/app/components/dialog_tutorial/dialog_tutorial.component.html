@@ -1,0 +1,29 @@
+
+<h2 mat-dialog-title>Welcome to Sound</h2>
+<mat-dialog-content>
+    <p>
+        If you are familiar with the tool, you might want to skip the tutorials.
+    </p>
+    <p>
+        Otherwise, here are the basics:
+    </p>
+    <ul>
+        <li>load a workflow net from a file</li>
+        <li>fire enabled transitions by clicking them</li>
+        <li>discover error states through firing sequences</li>
+        <li>retrace previously completed sequences from the log</li>
+        <li>get more detailed information by accessing the help menu</li>
+    </ul>
+</mat-dialog-content>
+<mat-dialog-actions style="margin-top:-10px;" align="center">
+    <button mat-button 
+            [mat-dialog-close]="true">
+        Skip Tutorials
+    </button>
+    <div style="width:100px;"></div>
+    <button mat-button 
+            cdkFocusInitial 
+            [mat-dialog-close]="false">
+        Let's Go!
+    </button>
+</mat-dialog-actions>

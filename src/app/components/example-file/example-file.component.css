@@ -1,4 +1,4 @@
-.mat-fab.mat-color {
-  color: #f0fff3;
-  background-color: #155724;
+.mdc-fab {
+    height: 42px;
+    cursor: grab;
 }

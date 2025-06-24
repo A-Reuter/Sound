@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>ERROR - {{data.message}}</h2>
+<mat-dialog-content>
+    <p class="code">(ErrorCode : {{data.errorCode}})</p>
+    @if (data.advice) {
+        <p class="advice">{{data.advice}}</p>
+    }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button
+            mat-dialog-close>
+        Close
+    </button>
+</mat-dialog-actions>

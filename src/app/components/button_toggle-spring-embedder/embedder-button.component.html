@@ -1,17 +1,12 @@
-<button 
-    mat-fab 
-    class="button" 
-    [matTooltip]="tooltip" 
-    [disabled]="disabled" 
-    (click)="processMouseClick()"
->
-    @if (embedderDisabled) {
-        <mat-icon>
-            auto_fix_off
-        </mat-icon>
-    } @else {
-        <mat-icon>
-            auto_fix_high
-        </mat-icon>
-    }
-</button>
+<div [matTooltip]="tooltip">
+    <button mat-fab 
+            class="button" 
+            [matTooltip]="tooltip" 
+            (click)="processMouseClick()">
+        @if (embedderEnabled) {
+            <mat-icon>auto_fix_high</mat-icon>
+        } @else {
+            <mat-icon>open_with<!-- auto_fix_off --></mat-icon>
+        }
+    </button>
+</div>

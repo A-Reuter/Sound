@@ -1,20 +1,26 @@
 <mat-button-toggle-group
     name="DisplayMode" 
     aria-label="Switch Display Mode"
-    class="button"
-    value="dfg" 
+    class="togglegroup"
+    [value]="displayMode" 
     [matTooltip]="tooltip"
 >
     <mat-button-toggle 
-        value="dfg" 
+        value="default" 
         (click)="processMouseClickA()"
     >
-        DFG
+        default
     </mat-button-toggle>
     <mat-button-toggle 
-        value="changes" 
+        value="traveled" 
         (click)="processMouseClickB()"
     >
-        changes
+        traveled
+    </mat-button-toggle>
+    <mat-button-toggle 
+        value="errors" 
+        (click)="processMouseClickC()"
+    >
+        errors
     </mat-button-toggle>
 </mat-button-toggle-group>

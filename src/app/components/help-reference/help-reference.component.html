@@ -1,0 +1,56 @@
+<div class="help-page">
+    <h2>Quick Guide</h2>
+    <div class="margin">
+        <p style="margin-bottom:5px;">note: this guide is based on the default settings</p>
+        <p class="list-t0-i10">(<em>should any settings have been changed to a degree impacting the applicability of this guide, the default settings can be restored by reloading the web page</em>)</p>
+        <ul>
+            <li>
+                Start by loading a petri net from a file via the file menu or by dragging it onto the canvas.
+            </li>
+            <li>
+                After a petri net has been successfully loaded, the tool automatically tests if it is a workflow net. <br/>
+                Should this not be the case, an error will be thrown and a new button will appear in the top right corner of the canvas, 
+                which can be used to open the error information panel listing more details about the unfulfilled condition(s). <br/>
+                If, however, the net passes the workflow check, you can then fire any enabled transition by clicking on it.
+            </li>
+            <li>
+                Transitions enabled by the current net marking are highlighted when using the default display mode setting. <br/>
+                The display mode can be toggled using the selector switch to the right above the canvas, while a legend listing 
+                the different highlight colors for every mode can be accessed using the info button next to that switch.
+            </li>
+            <li>
+                After each firing action, the net marking is changed accordingly, and the tool determines whether the reached marking 
+                is in conflict with the first two criteria of the soundness property (pertaining to termination and its correctness). <br/>
+                When such a conflict is detected, an error will be thrown and once again details will be made accessible through the error information panel. <br/>
+                Conformance to the third criterion (pertaining to transition liveness) is similarly checked after each firing action. <br/>
+                Should a given net contain at least one dead transition, an error state pertaining to all dead transitions 
+                will be set in once every live transition has been visited. <br/>
+                Progress on verifying conformance to this criterion can be checked manually by switching 
+                to the traveled display mode and looking for unvisited transitions.
+            </li>
+            <li>
+                While the active sequence has not terminated and no error has occurred, another transition may be fired to expand the sequence.
+            </li>
+            <li>
+                At any point during the execution of a sequence, you can undo or redo individual firing actions, or reset the net 
+                to the initial marking by using the corresponding buttons or edit menu entries.
+            </li>
+            <li>
+                When the firing sequence terminates, either with or without an error, the tool checks whether this sequence is already 
+                present within the sequence log, and, if it is not, appends it to the log, which can be found below the canvas.
+            </li>
+            <li>
+                After a sequence has terminated, resetting the net will allow for the execution of a new sequence.
+            </li>
+            <li>
+                At any time, a sequence from the log can be loaded by selecting it from the log panel, which can then be retraced by using 
+                the undo and redo buttons or the respective entries of the edit menu to skip to skip back or forward.
+            </li>
+            <li>
+                Finally, the current progress - including net, current marking, active sequence & sequence log - 
+                can be saved to a .sav file anytime to be loaded back later.
+            </li>
+        </ul>
+    </div>
+    <br/>
+</div>

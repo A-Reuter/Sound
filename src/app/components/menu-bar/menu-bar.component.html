@@ -1,0 +1,615 @@
+<input #fileSelector 
+       class="file-selector" 
+       type="file" 
+       (change)="processFileSelection($event)"/>
+
+<div class="bar">
+
+    <button mat-button 
+            color="color" 
+            [matMenuTriggerFor]="fileMenu">
+        File
+    </button>
+    <mat-menu #fileMenu="matMenu">
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="loadTooltip" 
+                [disabled]="loadDisabled" 
+                (click)="fileSelector.click()">
+            Load File
+        </button>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="saveMenuTooltip" 
+                [disabled]="saveMenuDisabled" 
+                [matMenuTriggerFor]="saveMenu">
+            Save File
+        </button>
+        <mat-menu #saveMenu="matMenu">
+            <button mat-menu-item 
+                    matTooltipPosition="after" 
+                    [matTooltip]="saveTooltip" 
+                    [disabled]="saveDisabled" 
+                    (click)="processSaveAction('sav')">
+                Save Progress as .sav
+            </button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item 
+                    matTooltipPosition="after" 
+                    [matTooltip]="exportTooltip" 
+                    [disabled]="exportDisabled" 
+                    (click)="processSaveAction('json')">
+                Export Net as .json
+            </button>
+            <button mat-menu-item 
+                    matTooltipPosition="after" 
+                    [matTooltip]="exportTooltip" 
+                    [disabled]="exportDisabled" 
+                    (click)="processSaveAction('pnml')">
+                Export Net as .pnml
+            </button>
+            <button mat-menu-item 
+                    matTooltipPosition="after" 
+                    [matTooltip]="exportTooltip" 
+                    [disabled]="exportDisabled" 
+                    (click)="processSaveAction('txt')">
+                Export Net as .txt
+            </button>
+        </mat-menu>
+    </mat-menu>
+
+    <button mat-button 
+            color="color" 
+            [matMenuTriggerFor]="editMenu">
+        Edit
+    </button>
+    <mat-menu #editMenu="matMenu">
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="deleteTooltip" 
+                [disabled]="deleteDisabled" 
+                (click)="processDeleteAction()">
+            Delete Net
+        </button>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="resetTooltip" 
+                [disabled]="resetDisabled" 
+                (click)="processResetAction()">
+            Reset Net
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="undoTooltip" 
+                [disabled]="undoDisabled" 
+                (click)="processUndoAction()">
+            Undo Step
+        </button>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="redoTooltip" 
+                [disabled]="redoDisabled" 
+                (click)="processRedoAction()">
+            Redo Step
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="autorunTooltip" 
+                [disabled]="autorunDisabled" 
+                (click)="processAutoAction()">
+            @if (autoRunActive) {
+                Stop Automation
+            } @else {
+                Start Automation
+            }
+        </button>
+    </mat-menu>
+
+    <button mat-button 
+            extended 
+            [matMenuTriggerFor]="viewMenu">
+        View
+    </button>
+    <mat-menu #viewMenu="matMenu">
+        <button mat-menu-item 
+                [matMenuTriggerFor]="modeMenu">
+            Change Display Mode
+        </button>
+        <mat-menu #modeMenu="matMenu">
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="highlights source & sink places, aswell as enabled transitions" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [disabled]="displayModeDefault" 
+                              [checked]="displayModeDefault" 
+                              (change)="processModeSelection('D')" 
+                              (click)="$event.stopPropagation();">
+                    Default
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="highlights traveled paths" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [disabled]="displayModeTraveled" 
+                              [checked]="displayModeTraveled" 
+                              (change)="processModeSelection('T')" 
+                              (click)="$event.stopPropagation();">
+                    Traveled
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="highlights occurring errors" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [disabled]="displayModeErrors" 
+                              [checked]="displayModeErrors" 
+                              (change)="processModeSelection('E')" 
+                              (click)="$event.stopPropagation();">
+                    Errors
+                </mat-checkbox>
+            </div>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                [matMenuTriggerFor]="elemsMenu">
+            Show / Hide Elements
+        </button>
+        <mat-menu #elemsMenu="matMenu">
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showArcWeights" 
+                              (change)="processElementSelection('AW', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Arc Weights
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showNodeInfos" 
+                              (change)="processElementSelection('NI', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Node Information
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showPlaceIds" 
+                              (change)="processElementSelection('PI', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Place Ids
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showPlaceLabels" 
+                              (change)="processElementSelection('PL', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Place Labels
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showPlaceMarkings" 
+                              (change)="processElementSelection('PM', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Place Markings
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showTransitionIds" 
+                              (change)="processElementSelection('TI', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Transition Ids
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showTransitionLabels" 
+                              (change)="processElementSelection('TL', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Transition Labels
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="showTransitionTags" 
+                              (change)="processElementSelection('TT', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Transition Tags
+                </mat-checkbox>
+            </div>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="embedderTooltip" 
+                (click)="processEmbedderAction()">
+            Toggle Spring Embedder
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="layoutTooltip" 
+                [disabled]="layoutDisabled" 
+                (click)="processLayoutAction()">
+            Force Net Layout
+        </button>
+        <button mat-menu-item 
+                matTooltipPosition="after" 
+                [matTooltip]="focusTooltip" 
+                [disabled]="focusDisabled" 
+                (click)="processFocusAction()">
+            Focus View
+        </button>
+    </mat-menu>
+
+    <button mat-button 
+            outlined 
+            [matMenuTriggerFor]="settingsMenu">
+        Settings
+    </button>
+    <mat-menu #settingsMenu="matMenu">
+        <button mat-menu-item 
+                [matMenuTriggerFor]="mdCfgMenu">
+            Display Mode
+        </button>
+        <mat-menu #mdCfgMenu="matMenu">
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="automatically change to the 'errors' display mode when an error occurs" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="switchOnError" 
+                              (change)="processChangeSelection('E', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Change On Error
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="automatically change to the 'default' display mode when loading a new file"
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="switchOnLoadF" 
+                              (change)="processChangeSelection('F', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Change On File Load 
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="automatically change to the 'traveled' display mode when loading a log sequence"
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="switchOnLoadL" 
+                              (change)="processChangeSelection('L', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Change On Log Load 
+                </mat-checkbox>
+            </div>
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 matTooltip="automatically change to the 'traveled' display mode when enabling the sequence automation" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="switchOnRun" 
+                              (change)="processChangeSelection('R', $event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Change On Autorun
+                </mat-checkbox>
+            </div>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                [matMenuTriggerFor]="seCfgMenu">
+            Spring Embedder
+        </button>
+        <mat-menu #seCfgMenu="matMenu">
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 [matTooltip]="embedderExemptionsTooltip" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="embedderExemptions" 
+                              (change)="processEmbedderUniversalAction($event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Exempt Dragged Nodes
+                </mat-checkbox>
+            </div>
+            <button mat-menu-item 
+                    class="tether" 
+                    [matMenuTriggerFor]="tetherMenu">
+                Tethering Settings
+            </button>
+            <mat-menu #tetherMenu="matMenu">
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="nodes are loosely tethered together" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="embedderTetheringLoose" 
+                                  [checked]="embedderTetheringLoose" 
+                                  (change)="processTetheringSelection('L')" 
+                                  (click)="$event.stopPropagation();">
+                        Loose
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="nodes are moderately tethered together" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="embedderTetheringBalanced" 
+                                  [checked]="embedderTetheringBalanced" 
+                                  (change)="processTetheringSelection('B')" 
+                                  (click)="$event.stopPropagation();">
+                        Balanced
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="nodes are more tightly tethered" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="embedderTetheringTight" 
+                                  [checked]="embedderTetheringTight" 
+                                  (change)="processTetheringSelection('T')" 
+                                  (click)="$event.stopPropagation();">
+                        Tight
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                [matMenuTriggerFor]="saCfgMenu">
+            Sequence Automation
+        </button>
+        <mat-menu #saCfgMenu="matMenu">
+            <div class="slider-container"
+                 (click)="$event.stopPropagation();">
+                <div>
+                    <label>Iteration Delay: {{slider.value}}ms</label>
+                </div>
+                <div>
+                    <mat-slider class="slider" min="0" max="5000" step="100">
+                        <input matSliderThumb [(ngModel)]="sliderValue" #slider>
+                    </mat-slider>
+                </div>
+            </div>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                [matMenuTriggerFor]="wfCfgMenu">
+            Workflow Checks
+        </button>
+        <mat-menu #wfCfgMenu="matMenu">
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="only allow arc weights up to 1" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="strictWorkflowChecks" 
+                                  (change)="processChecksAction()" 
+                                  (click)="$event.stopPropagation();">
+                        Use Narrow Definition
+                    </mat-checkbox>
+                </div>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                [matMenuTriggerFor]="efCfgMenu">
+            Example Files
+        </button>
+        <mat-menu #efCfgMenu="matMenu">
+            <button mat-menu-item
+                    (click)="processExampleAction()">
+                @if (exampleFilesEnabled) {
+                    Hide Example Files
+                } @else {
+                    Show Example Files
+                }
+            </button>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
+                [matMenuTriggerFor]="nfCfgMenu">
+            Notifications
+        </button>
+        <mat-menu #nfCfgMenu="matMenu">
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="ntfEMenu">
+                On Application Malfunction
+            </button>
+            <mat-menu #ntfEMenu="matMenu">
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a dialog window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyErrorDialog" 
+                                  [checked]="notifyErrorDialog" 
+                                  (change)="processNotificationSelection('ED')" 
+                                  (click)="$event.stopPropagation();">
+                        Dialog Window
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a popup window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyErrorPopup" 
+                                  [checked]="notifyErrorPopup" 
+                                  (change)="processNotificationSelection('EP')" 
+                                  (click)="$event.stopPropagation();">
+                        Popup Window
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a toast message" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyErrorToast" 
+                                  [checked]="notifyErrorToast" 
+                                  (change)="processNotificationSelection('ET')" 
+                                  (click)="$event.stopPropagation();">
+                        Toast Message
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="ntfCMenu">
+                For Confirmation
+            </button>
+            <mat-menu #ntfCMenu="matMenu">
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a dialog window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyConfirmDialog" 
+                                  [checked]="notifyConfirmDialog" 
+                                  (change)="processNotificationSelection('CD')" 
+                                  (click)="$event.stopPropagation();">
+                        Dialog Window
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a popup window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyConfirmPopup" 
+                                  [checked]="notifyConfirmPopup" 
+                                  (change)="processNotificationSelection('CP')" 
+                                  (click)="$event.stopPropagation();">
+                        Popup Window
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays no window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyConfirmNone" 
+                                  [checked]="notifyConfirmNone" 
+                                  (change)="processNotificationSelection('CN')" 
+                                  (click)="$event.stopPropagation();">
+                        Automatic Confirmation
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="ntfIMenu">
+                For Information
+            </button>
+            <mat-menu #ntfIMenu="matMenu">
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a dialog window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyInfoDialog" 
+                                  [checked]="notifyInfoDialog" 
+                                  (change)="processNotificationSelection('ID')" 
+                                  (click)="$event.stopPropagation();">
+                        Dialog Window
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a popup window" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyInfoPopup" 
+                                  [checked]="notifyInfoPopup" 
+                                  (change)="processNotificationSelection('IP')" 
+                                  (click)="$event.stopPropagation();">
+                        Popup Window
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays a toast message" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyInfoToast" 
+                                  [checked]="notifyInfoToast" 
+                                  (change)="processNotificationSelection('IT')" 
+                                  (click)="$event.stopPropagation();">
+                        Toast Message
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="displays no info" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="notifyInfoNone" 
+                                  [checked]="notifyInfoNone" 
+                                  (change)="processNotificationSelection('IN')" 
+                                  (click)="$event.stopPropagation();">
+                        No Info
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </mat-menu>
+    </mat-menu>
+
+    <!-- TODO : Stop it. -->
+    <button mat-button 
+            matTooltipPosition="after" 
+            matTooltipShowDelay="120000"
+            matTooltip="Get some help."
+            [routerLink]="['../help']">
+        Help
+    </button>
+
+</div>

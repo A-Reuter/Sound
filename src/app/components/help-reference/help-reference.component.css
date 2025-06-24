@@ -1,0 +1,37 @@
+.help-page {
+    margin-top: 22px;
+    margin-left: 30px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    min-width: 550px;
+    /* max-width: 1500px; */
+    /* font-family: Roboto; */
+}
+
+.list-t0-i10 {
+    margin-top: 0px;
+    text-indent: 10px hanging;
+}
+
+.margin {
+    margin-left: 10px;
+}
+
+h2 {
+    margin-top: 22px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    margin-top: 30px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+ul {
+    margin-top: 30px;
+    margin-left: -40px;
+    list-style-type: none;
+}

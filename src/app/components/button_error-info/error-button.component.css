@@ -1,0 +1,14 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    width: 100px;
+}
+
+.mat-icon{
+    font-size: 75px;
+    width: 75px;
+    height: 75px;
+    color: red;
+}

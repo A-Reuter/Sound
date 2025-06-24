@@ -1,0 +1,30 @@
+<div class="sidebar">
+    <div class="icon-container">
+        <button class="icon" 
+                [routerLink]="['../tool']">
+            <mat-icon color="black">home</mat-icon>
+        </button>
+        <div class="icon-text">Help</div>
+        <button class="button-close" 
+                [routerLink]="['../tool']">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="sidebar-nav">
+        @for (subpage of subpages; track $index) {
+            <li class="sidebar-nav-item">
+                <a class="sidebar-nav-link" 
+                   routerLinkActive="active" 
+                   [routerLinkActiveOptions]="{exact:true}" 
+                   [routerLink]="subpage.route">
+                    <mat-icon class="sidebar-nav-icon">{{subpage.icon}}</mat-icon>
+                    <span class="sidebar-nav-text">{{subpage.label}}</span>
+                </a>
+            </li>
+        }
+    </div>
+    <button class="button-reset" 
+            (click)="resetScroll()">
+        <mat-icon class="icon">expand_less</mat-icon>
+    </button>
+</div>

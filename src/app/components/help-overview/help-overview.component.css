@@ -1,0 +1,32 @@
+.help-page {
+    margin-top: 22px;
+    margin-left: 30px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    min-width: 550px;
+    /* max-width: 1500px; */
+    /* font-family: Roboto; */
+}
+
+.margin {
+    margin-left: 10px;
+}
+
+h2 {
+    margin-top: 22px;
+    margin-bottom: 25px;
+}
+
+li {
+    margin-left: -10px;
+    list-style-type: circle;
+}
+
+span.snd {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+ul {
+    margin-top: 5px;
+}

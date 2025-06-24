@@ -1,0 +1,38 @@
+<div class="info-panel"
+     (mouseenter)="processMouseEnter()"
+     (mouseleave)="processMouseLeave()">
+    <div class="frame">
+        <div class="flex-row_space-between_start">
+            <div class="flex-row_space-evenly_start">
+                <mat-icon class="title-icon">warning_amber</mat-icon>
+                <h1 class="title">Error List</h1>
+            </div>
+            <button mat-icon-button
+                    class="close-button" 
+                    (click)="processButtonClick()">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+        </div>
+        @for (paragraph of errorInfo.paragraphs; track $index) {
+            <h3 class="title">{{paragraph.title}}</h3>
+            @for (bucket of paragraph.content; track $index) {
+                @if (bucket.type === 'text') {
+                    @for (item of bucket.items; track $index) {
+                        <p class="text">{{item}}</p>
+                    }
+                } @else if (bucket.type === 'list') {
+                    @for (item of bucket.items; track $index) {
+                        <li class="list">
+                            <span class="text">{{item}}</span>
+                        </li>
+                    }
+                }
+                @if (bucket.ending) {
+                    <br>
+                }
+            }
+        } @empty {
+            <font>(no info available)</font>
+        }
+    </div>
+</div>

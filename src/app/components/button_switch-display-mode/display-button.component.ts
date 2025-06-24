@@ -1,11 +1,10 @@
-import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
-// import {MatFabButton} from "@angular/material/button";
-// import {MatIconModule} from '@angular/material/icon';
+import {Component, OnDestroy} from '@angular/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
-import {DisplayService} from '../../services/display.service';
-import {SettingsSingleton} from "../../classes/settings/settings.singleton";
+import {Subscription} from 'rxjs';
+
+import {SettingsService} from '../../services/config/settings.service';
 
 @Component({
     selector: 'display-button',
@@ -13,57 +12,72 @@ import {SettingsSingleton} from "../../classes/settings/settings.singleton";
     styleUrls: ['./display-button.component.css'],
     standalone: true,
     imports: [
-        // MatFabButton,
-        // MatIconModule,
         MatTooltipModule,
-        MatButtonToggleModule
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+        MatButtonToggleModule,
+    ]
 })
-export class DisplayButtonComponent {
+export class DisplayButtonComponent implements OnDestroy {
 
     /* attributes */
+    
+    private readonly _settingsSubscription : Subscription;
 
-    private _displayMode : 'dfg' | 'changes';
+    private _displayMode : ('default' | 'traveled' | 'errors') = 'default';
 
     /* methods - constructor */
 
     constructor(
-        private _settings: SettingsSingleton,
-        private _displayService : DisplayService,
+        private readonly settingsService : SettingsService,
     ) {
-        this._displayMode = 'dfg';
+        this._settingsSubscription = this.settingsService.state$.subscribe(
+            (state) => {
+                this._displayMode = state.displayMode;
+            }
+        );
+    };
+
+    /* methods - on destroy */
+
+    ngOnDestroy() : void {
+        this._settingsSubscription.unsubscribe();
     };
 
     /* methods - getters */
 
-    public get displayMode() : 'dfg' | 'changes' {
+    public get displayMode() : ('default' | 'traveled' | 'errors') {
         return this._displayMode;
     };
 
     public get tooltip() : string {
-        if (this._displayMode === 'dfg') {
-            return 'switch display mode to highlight the latest cut\'s changes';
+        if (this._displayMode === 'default') {
+            return 'highlighting special nodes';
+        } else if (this._displayMode === 'traveled') {
+            return 'highlighting traveled paths';
         } else {
-            return 'switch display mode to highlight DFG\'s';
-        }
+            return 'highlighting occurring errors';
+        };
     };
 
     /* methods - other */
 
     public processMouseClickA() {
-        if (this._displayMode === 'changes') {
-            this._displayMode = 'dfg';
-            this._settings.updateState({ displayMode: this._displayMode });
-            this._displayService.refreshData();
+        if (this._displayMode !== 'default') {
+            this._displayMode = 'default';
+            this.settingsService.update({displayMode : 'default'});
         };
     };
 
     public processMouseClickB() {
-        if (this._displayMode === 'dfg') {
-            this._displayMode = 'changes';
-            this._settings.updateState({ displayMode: this._displayMode });
-            this._displayService.refreshData();
+        if (this._displayMode !== 'traveled') {
+            this._displayMode = 'traveled';
+            this.settingsService.update({displayMode : 'traveled'});
+        };
+    };
+
+    public processMouseClickC() {
+        if (this._displayMode !== 'errors') {
+            this._displayMode = 'errors';
+            this.settingsService.update({displayMode : 'errors'});
         };
     };
 

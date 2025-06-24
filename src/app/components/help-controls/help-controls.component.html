@@ -1,0 +1,121 @@
+<div class="help-page">
+    <h2>Controls</h2>
+    <div class="margin">
+        <h3>Display Configuration</h3>
+        <div class="margin">
+            <h4>Mode Selection</h4>
+            <div class="margin">
+                <p>the display mode can be changed using the selector switch over the top right corner of the canvas</p>
+                <p style="margin-bottom:7px;">there are three modes available to choose from:</p>
+                <ul class="indent-105">
+                    <li><span class="highlight">default&nbsp;</span> - highlights source and sink places, as well as enabled transitions</li>
+                    <li><span class="highlight">traveled</span> - highlights parts of the net that are present within the active firing sequence or the sequence log</li>
+                    <li><span class="highlight">errors&nbsp;&nbsp;</span> - highlights parts of the net that are directly or indirectly tied to the invalidity of a net marking</li>
+                </ul>
+            </div>
+            <h4>Showing & Hiding Elements</h4>
+            <div class="margin">
+                <p>individual display elements can be enabled or disabled through the options available under the <b>Show / Hide Elements</b> tab of the <b>View</b> menu</p>
+            </div>
+            <h4>Color Legend</h4>
+            <div class="margin">
+                <p>the canvas color legend can be accessed using the small info button located to the right of the display mode selector</p>
+            </div>
+            <h4>Error Information</h4>
+            <div class="margin">
+                <p>whenever an error occurs, a panel containing additional information can be accessed using the <b>Question Mark</b> button which appears in the top right corner of the canvas</p>
+            </div>
+        </div>
+        <h3>File Loading</h3>
+        <div class="margin">
+            <h4>General</h4>
+            <div class="margin">
+                <p>petri nets may be loaded from .pnml, .json, .txt or .sav files</p>
+                <p style="margin-bottom:7px;">certain restrictions apply regarding individual formats:</p>
+                <ul class="indent-105">
+                    <li><span class="highlight">pnml&nbsp;&nbsp;&nbsp;&nbsp;</span> - all files adhering to the 2009 version of the Petri Net Markup Language grammar should work without issue</li>
+                    <li><span class="highlight">json,txt</span> - only supports certain proprietary formats generated and exported by various tools available on the <i>ilovepetrinets</i> page</li>
+                    <li><span class="highlight">sav&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> - used for exporting and reimporting savestates of this application, will not work with any other sav files</li>
+                </ul>
+            </div>
+            <h4>Drag & Drop</h4>
+            <div class="margin">
+                <p>files can be loaded by dragging them onto the canvas, e.g. from the example files section or from another window</p>
+            </div>
+            <h4>File Selection</h4>
+            <div class="margin">
+                <p>to select a file via a standard selection window, use the <b>Load File</b> option within the <b>File</b> menu</p>
+            </div>
+            <h4>Example Files</h4>
+            <div class="margin">
+                <p>leftmost within the control bar above the canvas, three example files are available to load through drag & drop</p>
+                <p style="margin-bottom:7px;">every example showcases one of the three conditions of the soundness property not being met:</p>
+                <ul>
+                    <li class="circle">example A contains a workflow net that is not sound because the modelled process does not always terminate</li>
+                    <li class="circle">example B contains a workflow net that is not sound because the modelled process does not always terminate correctly</li>
+                    <li class="circle">example C contains a workflow net that is not sound because the modelled process contains an activity that can never be executed</li>
+                </ul>
+            </div>
+        </div>
+        <h3>Basic Canvas Interactions</h3>
+        <div class="margin">
+            <h4>moving a node</h4>
+            <ul>
+                <li>to move a node, hover over it, press and hold the primary (left) mouse button, and then drag it across the canvas</li>
+            </ul>
+            <h4>marking a node</h4>
+            <ul>
+                <li>to mark a node or arc, hover over it and press the tertiary (middle) mouse button or the <b>M</b> key (press again to unmark)</li>
+                <li>marking is a strictly visual feature which only serves to allow the emphasis of elements that are of particular interest or to improve orientation when switching between different display modes</li>       
+            </ul>
+            <h4>displaying node information</h4>
+            <ul>
+                <li>a panel with detailed information about a specific node will be displayed when hovering over that node</li>
+                <li>this panel can be shown permanently by pressing the <b>I</b> key when targeting the node (press again to deactivate)</li>
+            </ul>
+            <h4>arranging the net</h4>
+            <ul>
+                <li>to toggle between free and automated net arrangement, press the <b>Spring Embedder</b> button located on the right within the control row above the canvas, or use the <b>Toggle Spring Embedder</b> option within the <b>View</b> menu</li>
+                <li>to try to force a net layout where all source places are located to the left while all sink places are located to the right, use the <b>Force Net Layout</b> option within the <b>View</b> menu</li>
+            </ul>
+            <h4>setting the view focus</h4>
+            <ul>
+                <li>to focus the canvas view on the currently displayed net, press the <b>Focus</b> button located on the right within the control row above the canvas, or use the <b>Focus View</b> option within the <b>View</b> menu</li>
+            </ul>
+            <h4>changing the view area</h4>
+            <ul>
+                <li>to increase or decrease the area visible on the canvas, use the mouse scroll wheel whilst hovering over the canvas</li>
+            </ul>
+        </div>
+        <h3>Sequence Control</h3>
+        <div class="margin">
+            <h4>firing a transition</h4>
+            <ul>
+                <li>to fire an enabled transition, hover over it and press the primary (left) mouse button</li>
+            </ul>
+            <h4>undoing a firing action / skipping backward</h4>
+            <ul>
+                <li>to roll back a previously executed firing action, press the <b>Back</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
+            </ul>
+            <h4>redoing a firing action / skipping forward</h4>
+            <ul>
+                <li>to restore a previously undone firing action, press the <b>Forward</b> button located centrally above the canvas, or use the <b>Redo Step</b> option within the <b>Edit</b> menu</li>
+            </ul>
+            <h4>resetting the net marking</h4>
+            <ul>
+                <li>to reset the net marking, press the <b>Reset</b> button located centrally above the canvas, or use the <b>Reset Net</b> option within the <b>Edit</b> menu</li>
+            </ul>
+            <h4>loading a log sequence</h4>
+            <ul>
+                <li>to load a sequence from the log, hover over it and press the primary (left) mouse button</li>
+            </ul>
+            <h4>automating sequence execution</h4>
+            <ul>
+                <li>to start the automated execution of random firing sequences, press the <b>Play</b> button located centrally above the canvas, or use the <b>Start Automation</b> option within the <b>Edit</b> menu</li>
+                <li>the algorithm will generate sequences by repeatedly choosing a random transition from all enabled transitions and firing it</li>
+                <li>when a sequence terminates, the algorithm will reset the net and start a new sequence, looping until it is manually stopped</li>
+            </ul>
+        </div>
+    </div>
+    <br/>
+</div>

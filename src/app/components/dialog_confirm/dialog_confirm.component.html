@@ -1,0 +1,22 @@
+@if (data.title) {
+    <h2 mat-dialog-title style="text-align:center">{{data.title}}</h2>
+}
+<mat-dialog-content>
+    @for (line of data.message; track $index) {
+        @if (line !== undefined) {
+            <p [style]="line.style">{{line.content}}</p>
+        } @else {
+            <br style="margin-top:0px;margin-bottom:0px"/>
+        }
+    }
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button 
+            [mat-dialog-close]="false">
+        Cancel
+    </button>
+    <button mat-button 
+            [mat-dialog-close]="true">
+        Confirm
+    </button>
+</mat-dialog-actions>

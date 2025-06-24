@@ -5,16 +5,16 @@ export class LinkedListIterator<T> {
 
     /* attributes */
 
-    private currentEntry : LinkedListEntry<T> | undefined = undefined;
+    private currentEntry : LinkedListEntry<T> | undefined;
 
     /* methods : constructor */
 
-    public constructor(inList : LinkedList<T>, inArg0 : 'first' | 'last') {
+    public constructor(list : LinkedList<T>, inArg0 : 'first' | 'last') {
         if (inArg0 === 'first') {
-            this.currentEntry = inList.getFirstEntry();
+            this.currentEntry = list.getFirstEntry();
         }
         else {
-            this.currentEntry = inList.getLastEntry();
+            this.currentEntry = list.getLastEntry();
         };
     };
 

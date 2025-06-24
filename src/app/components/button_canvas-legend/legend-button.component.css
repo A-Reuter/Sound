@@ -1,0 +1,64 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    width: 42px;
+}
+
+.mat-icon{
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+.container {
+    position: relative;
+}
+
+.container-overlay-icon {
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+    top: 4px;
+    right: 4px;
+}
+
+.overlay-icon{
+    background: #00000000;
+    color: #6d6d6d;
+    font-size: 34px;
+    width: 34px;
+    height: 34px;
+}
+
+.mdc-fab {
+    width: 42px;
+    height: 42px;
+    box-shadow: none;
+    border-radius: 4px;
+    border: solid 1px #e0e0e0;
+    color: #6d6d6d;
+}
+
+.mdc-fab:active {
+    color: #6d6d6d;
+}
+
+.mat-mdc-fab {
+    --mdc-fab-container-shape: 4px;
+    --mdc-fab-container-elevation-shadow: none;
+    --mdc-fab-hover-container-elevation-shadow: none;
+    --mdc-fab-focus-container-elevation-shadow: none;
+    --mdc-fab-pressed-container-elevation-shadow: none;
+}
+
+.mat-accent.mat-mdc-fab {
+    --mdc-fab-container-color: #ffffff;
+    --mat-fab-foreground-color: #6d6d6d;
+    --mat-fab-ripple-color: #bbbbbb;
+    --mat-fab-state-layer-color: #bbbbbb;
+    --mat-fab-hover-state-layer-opacity: 0.12;
+    --mat-fab-focus-state-layer-opacity: 1;
+    --mat-fab-pressed-state-layer-opacity: 0.12;
+}

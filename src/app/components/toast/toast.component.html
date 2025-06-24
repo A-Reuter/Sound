@@ -1,5 +1,16 @@
-<div class="toast" [ngClass]="[type]" *ngIf="message">
-    <div class="toast-content">
-        <span class="message">{{ message }}</span>
+@if (message) {
+    <div [class]="['toast',type,content]">
+        <div class="toast-content">
+            @for (lineitem of message; track lineitem) {
+                @if ($last) {
+                    <span class="message">{{lineitem}}</span>
+                } @else {
+                    <span class="message">{{lineitem}}</span>
+                    <br>
+                }
+            } @empty {
+                <span class="message"></span>
+            }
+        </div>
     </div>
-</div>
+}

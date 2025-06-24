@@ -4,13 +4,15 @@ export class LinkedListEntry<T> {
 
     private readonly data : T;
 
-    private prev : LinkedListEntry<T> | undefined = undefined;
-    private next : LinkedListEntry<T> | undefined = undefined;
+    private prev : LinkedListEntry<T> | undefined;
+    private next : LinkedListEntry<T> | undefined;
 
     /* methods : constructor */
 
-    public constructor(inData : T) {
-        this.data = inData;
+    public constructor(data : T) {
+        this.data = data;
+        this.prev = undefined;
+        this.next = undefined;
     };
 
     /* methods : getters */

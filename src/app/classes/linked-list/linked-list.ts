@@ -4,10 +4,10 @@ export class LinkedList<T> {
 
     /* attributes */
 
-    private length : number = 0;
+    private length : number;
 
-    private firstEntry : LinkedListEntry<T> | undefined = undefined;
-    private lastEntry : LinkedListEntry<T> | undefined = undefined;
+    private firstEntry : LinkedListEntry<T> | undefined;
+    private lastEntry : LinkedListEntry<T> | undefined;
 
     /* methods : constructor*/
 
@@ -134,7 +134,7 @@ export class LinkedList<T> {
                 };
             };
             this.length--;
-        } else if (this.length = 0) {
+        } else if (this.length === 0) {
             throw new Error('#cls.lll.dle.001: ' + 'delete failed - list has 0 entries');
         } else {
             throw new Error('#cls.lll.dle.000: ' + 'delete failed - list has less than 0 entries (' + this.length + ')');

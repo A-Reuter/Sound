@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {MatFabButton} from "@angular/material/button";
+import {MatFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
@@ -9,15 +9,15 @@ import {MatTooltipModule} from '@angular/material/tooltip';
     styleUrls: ['./example-file.component.css'], 
     standalone: true, 
     imports: [
-        MatFabButton, 
-        MatIconModule, 
-        MatTooltipModule
+        MatFabButton,
+        MatIconModule,
+        MatTooltipModule,
     ]
 })
 export class ExampleFileComponent {
 
-    @Input() title: string | undefined;
-    @Input() label: string | undefined;
+    @Input() title : (string | undefined);
+    @Input() label : (string | undefined);
     @Input({required: true}) link: string = '';
 
     /* attributes */
@@ -40,11 +40,12 @@ export class ExampleFileComponent {
         };
     };
 
-    public get type() : boolean {
-        if (this.link.split('.').pop() === 'json') {
-            return true;
+    public get filetype() : string {
+        const type : (string | undefined) = this.link.split('.').pop();
+        if (type) {
+            return type;
         } else {
-            return false;
+            return '';
         };
     };
 

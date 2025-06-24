@@ -1,0 +1,18 @@
+.flex_column_align_start_stretch {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.gap_v_30px {
+    width: 100%;
+    height: 30px;
+}
+
+hr {
+    border-color: lightgray;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+}

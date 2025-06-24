@@ -1,0 +1,69 @@
+<div class="help-page">
+    <h2>Definitions</h2>
+    <div class="margin">
+        <p style="margin-bottom:30px;">this section lists the core definitions the checks implemented in this application are based on</p>
+        <h3>Petri Net</h3>
+        <div class="margin">
+            <p>a petri net <span class="formula">PN = (P, T, F)</span> is a triple consisting of:</p>
+            <ul>
+                <li class="head"><span class="formula">P</span> - a finite set of place nodes</li>
+                <li>&nbsp;place nodes have a marking consisting of individual tokens</li>
+                <li>&nbsp;the set of all place markings defines the state of the net</li>
+                <li class="brackets">&nbsp;(<i>in a petri net modelling a process, places represent partial states</i>)</li>
+            </ul>
+            <ul>
+                <li class="head"><span class="formula">T</span> - a finite set of transition nodes</li>
+                <li>&nbsp;transition nodes have a set of input places, which are connected to the transition by an arc leading from the place to the transition</li>
+                <li>&nbsp;transition nodes have a set of output places, which are connected to the transition by an arc leading from the transition to the place</li>
+                <li>&nbsp;transition nodes have a state: if every input place of the transition has a marking equal to or greater than the weight of the arc leading to the transition, the transition is enabled</li>
+                <li>&nbsp;transition nodes are fireable: an enabled transition can be fired to consume a number of tokens from every input place and produce a number of tokens on every output place, each equal to the respective arc weight</li>
+                <li class="brackets">&nbsp;(<i>in a petri net modelling a process, transitions represent activities</i>)</li>
+            </ul>
+            <ul>
+                <li class="head"><span class="formula">F</span> - a set of arcs representing the flow relation</li>
+                <li>&nbsp;arcs can either lead from a place to a transition, or from a transition to a place, so they can never connect two nodes of the same type</li>
+                <li class="brackets">&nbsp;(<i>in a petri net modelling a process, the set of arcs connected to a singular transition node represent the transitional step from the partial state represented by the input places of the transition to the partial state represented by the output places of the transition that is triggered by executing the activity represented by the transition</i>)</li>
+            </ul>
+        </div>
+        <h3>Workflow Net</h3>
+        <div class="margin">
+            <p>a petri net is a workflow net if and only if:</p>
+            <ol>
+                <li class="roman-s"><span class="numeral">&nbsp;(i)&nbsp;&nbsp;</span>it has exactly two special places:</li>
+                <li class="roman-s">
+                    <ol class="inner">
+                        <li class="inner"><span class="numeral">(1)</span> a source place <span class="formula">i</span>, which has no incoming arcs</li>
+                        <li class="inner"><span class="numeral">(2)</span> a sink place <span class="formula">o</span>, which has no outgoing arcs</li>
+                    </ol>
+                </li>
+                <li class="roman-s"><span class="numeral">(ii)&nbsp;&nbsp;</span>for each transition <span class="formula">t</span> and place <span class="formula">p</span> there exists at least one directed path from <span class="formula">i</span> to <span class="formula">o</span> that includes <span class="formula">t</span> / <span class="formula">p</span></li>
+            </ol>
+        </div>
+        <h3>Soundness</h3>
+        <div class="margin">
+            <span>let <span class="formula">I</span> be the start marking and <span class="formula">O</span> be the end marking of a workflow net</span>
+            <br/>
+            <div style="margin-left:20px;">
+                <span>for <span class="formula">I</span>, let only the source place <span class="formula">i</span> be marked by a singular token</span>
+                <br/>
+                <span>for <span class="formula">O</span>, let only the sink place <span class="formula">o</span> be marked by a singular token</span>
+            </div>
+            <p>a workflow net is sound if and only if:</p>
+            <ol>
+                <li class="roman-l"><span class="numeral">&nbsp;&nbsp;(i)&nbsp;&nbsp;</span>for every state <span class="formula">M</span> reachable from state <span class="formula">I</span>, there exists a firing sequence leading from state <span class="formula">M</span> to state <span class="formula">O</span></li>
+                <li class="roman-l"><span class="numeral">&nbsp;(ii)&nbsp;&nbsp;</span>there is only one state reachable from state <span class="formula">I</span> that contains a token on place <span class="formula">o</span>, which is state <span class="formula">O</span></li>
+                <li class="roman-l"><span class="numeral">(iii)&nbsp;&nbsp;</span>for each transition <span class="formula">t</span> there exists at least one state reachable from state <span class="formula">I</span> that enables <span class="formula">t</span></li>
+            </ol>
+        </div>
+        <br/>
+        <p style="margin-top:40px;"><i><b>Source Text</b></i></p>
+        <div class="margin">
+            <ul>
+                <li class="head">Wil M. P. van der Aalst (1997): Verification of Workflow Nets</li>
+                <li class="src">International Conference on the Application and Theory of Petri Nets, (pp. 407-426)</li>
+                <li class="src">doi:10.1007/3‑540‑63139‑9_48</li>
+            </ul>
+        </div>
+    </div>
+    <br/>
+</div>

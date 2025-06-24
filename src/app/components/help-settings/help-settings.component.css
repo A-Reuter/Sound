@@ -1,0 +1,66 @@
+.help-page {
+    margin-top: 22px;
+    margin-left: 30px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    min-width: 550px;
+    /* max-width: 1500px; */
+    /* font-family: Roboto; */
+}
+
+.indent-85 {
+    text-indent: 85px hanging;
+}
+
+.indent-105 {
+    text-indent: 105px hanging;
+}
+
+.indent-145 {
+    text-indent: 145px hanging;
+}
+
+.margin {
+    margin-left: 10px;
+}
+
+h2 {
+    margin-top: 22px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    margin-top: 30px;
+}
+
+h4 {
+    margin-bottom: 10px;
+}
+
+li {
+    margin-top: 10px;
+    margin-left:0px;
+}
+
+li.no-icon {
+    list-style-type: none;
+}
+
+p {
+    margin-top: 10px;
+}
+
+p.brackets {
+    text-indent: 10px hanging;
+}
+
+span.highlight {
+    font-style: italic;
+    font-weight: bold;
+}
+
+ul {
+    margin-top: 10px;
+    margin-left: -20px;
+    margin-bottom: 0px;
+}

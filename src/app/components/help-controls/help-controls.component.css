@@ -1,0 +1,62 @@
+.help-page {
+    margin-top: 22px;
+    margin-left: 30px;
+    margin-right: 100px;
+    margin-bottom: 30px;
+    min-width: 550px;
+    /* max-width: 1500px; */
+    /* font-family: Roboto; */
+}
+
+.indent-105 {
+    text-indent: 105px hanging;
+}
+
+.margin {
+    margin-left: 10px;
+}
+
+h2 {
+    margin-top: 22px;
+    margin-bottom: 25px;
+}
+
+h3 {
+    margin-top: 30px;
+}
+
+h4 {
+    margin-bottom: 10px;
+}
+
+li {
+    margin-top: 10px;
+    margin-left:0px;
+}
+
+li.circle {
+    margin-top: 5px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    list-style-type: circle;
+}
+
+li {
+    list-style-type: none;
+}
+
+p {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+span.highlight {
+    font-style: italic;
+    font-weight: bold;
+}
+
+ul {
+    margin-top: 10px;
+    margin-left: -20px;
+    margin-bottom: 0px;
+}

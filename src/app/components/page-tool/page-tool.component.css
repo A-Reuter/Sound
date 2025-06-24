@@ -1,0 +1,110 @@
+.container_canvas {
+    width: 100%;
+    height: 600px;
+    position : relative;
+}
+
+.container_canvas_overlay {
+    position : absolute;
+    top: 20px;
+    right: 10px;
+}
+
+.container_controls {
+    margin-top: 7px;
+    margin-bottom: 7px;
+}
+
+.container_files {
+    width: 480px;
+    height: 42px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.container_out {
+    width: 100%;
+    margin-top: 22px;
+    margin-bottom: 0px;
+}
+
+.flex_column_align_start_stretch {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.flex_row_align_space-between_start {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.flex_row_align_space-evenly_start {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.gap_control_row_left {
+    width: calc(50% - 550px - 165px);
+    min-width: 50px;
+    height: 100%;
+}
+
+.gap_control_row_right {
+    width: calc((50% - 165px - 40px - 380px) / 2);
+    min-width: 25px;
+    height: 100%;
+}
+
+.gap_h_10px {
+    width: 10px;
+    min-width: 10px;
+    height: 100%;
+}
+
+.gap_h_15px {
+    width: 15px;
+    min-width: 15px;
+    height: 100%;
+}
+
+.gap_h_20px {
+    width: 20px;
+    min-width: 20px;
+    height: 100%;
+}
+
+.gap_h_50px {
+    width: 50px;
+    min-width: 50px;
+    height: 100%;
+}
+
+.gap_v_10px {
+    width: 100%;
+    height: 10px;
+}
+
+.gap_v_20px {
+    width: 100%;
+    height: 20px;
+}
+
+.gap_v_40px {
+    width: 100%;
+    height: 40px;
+}
+
+hr {
+    border-color: lightgray;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+}

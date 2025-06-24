@@ -1,0 +1,16 @@
+<div class="container">
+    <button 
+        mat-fab
+        class="button" 
+        matTooltipShowDelay="500" 
+        matTooltipPosition="below" 
+        [matTooltip]="tooltip" 
+        (click)="processMouseClick()">
+        <mat-icon>info_outline</mat-icon>
+    </button>
+    @if (legendEnabled) {
+        <div class="container-overlay-icon">
+            <mat-icon class="overlay-icon">close</mat-icon>
+        </div>
+    }
+</div>

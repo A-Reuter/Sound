@@ -1,0 +1,112 @@
+<div class="flex_column_align_start_stretch">
+
+    <!-- toast messages -->
+    <div *ngFor="let toast of toastMessages">
+        <app-toast [type]="toast.type" 
+                   [content]="toast.content" 
+                   [duration]="toast.duration" 
+                   [message]="toast.message">
+        </app-toast>
+    </div>
+
+    <!-- menu bar -->
+    <menu-bar (fileData)="processSourceChange($event)"></menu-bar>
+    
+    <!-- vertical line -->
+    <hr>
+
+    <!-- vertical gap -->
+    <div class="gap_v_10px"></div>
+
+    <!-- display controls -->
+    <div class="flex_row_align_space-between_start">
+        <files-button></files-button>
+        <div class="gap_h_20px"></div>
+        <div class="container_files">
+            @if (exampleFilesEnabled) {
+                <app-example-file title="an example workflow net that is not sound (does not always terminate)"
+                                  label="Example A" 
+                                  link="/assets/example-files/not-sound_1_no-termination.sav">
+                </app-example-file>
+                <div class="gap_h_20px"></div>
+                <app-example-file title="an example workflow net that is not sound (does not always terminate correctly)"
+                                  label="Example B" 
+                                  link="/assets/example-files/not-sound_2_invalid-termination.sav">
+                </app-example-file>
+                <div class="gap_h_20px"></div>
+                <app-example-file title="an example workflow net that is not sound (contains a dead transition)"
+                                  label="Example C" 
+                                  link="/assets/example-files/not-sound_3_dead-transition.sav">
+                </app-example-file>
+            }
+        </div>
+        <div class="gap_control_row_left"></div>
+        <delete-button></delete-button>
+        <div class="gap_h_50px"></div>
+        <undo-button></undo-button>
+        <div class="gap_h_10px"></div>
+        <autorun-button></autorun-button>
+        <div class="gap_h_10px"></div>
+        <redo-button></redo-button>
+        <div class="gap_h_50px"></div>
+        <reset-button></reset-button>
+        <div class="gap_control_row_right"></div>
+        <focus-button></focus-button>
+        <div class="gap_control_row_right"></div>
+        <embedder-button></embedder-button>
+        <div class="gap_h_20px"></div>
+        <display-button></display-button>
+        <div class="gap_h_20px"></div>
+        <legend-button></legend-button>
+    </div>
+
+    <!-- vertical gap -->
+    <div class="gap_v_40px"></div>
+
+    <!-- canvas -->
+    <div class="flex_row_align_space-between_start">
+        <div class="container_canvas">
+            <net-canvas id="canvas" (fileData)="processSourceChange($event)"></net-canvas>
+            @if (errorButtonEnabled && noAutorun) {
+                <div class="container_canvas_overlay">
+                    <error-button></error-button>
+                </div>
+            }
+        </div>
+        @if (errorInfoEnabled) {
+            <div class="gap_h_15px"></div>
+            <error-info></error-info>
+        } @else if (canvasLegendEnabled) {
+            <div class="gap_h_15px"></div>
+            <canvas-legend></canvas-legend>
+        }
+    </div>
+
+    <!-- vertical gap -->
+    <div class="gap_v_20px"></div>
+
+    <!-- vertical line -->
+    <hr>
+
+    <!-- firing sequence log -->
+    <log-area></log-area>
+
+    <!-- vertical line -->
+    <hr>
+
+    <!-- file content output field -->
+    <div class="flex_row_align_space-evenly_start">
+        <mat-form-field appearance="outline"
+                        class="container_out">
+            <mat-label>File Content</mat-label>
+            <textarea matInput 
+                      style="margin-bottom:0px"
+                      cdkTextareaAutosize 
+                      cdkAutosizeMinRows="3" 
+                      cdkAutosizeMaxRows="30" 
+                      [formControl]="fileAreaFc">
+            </textarea>
+        </mat-form-field>
+    </div>
+
+</div>

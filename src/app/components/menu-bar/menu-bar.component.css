@@ -1,0 +1,50 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+}
+
+.checkbox {
+    margin-right: 10px;
+}
+
+.file-selector {
+    display: none;
+}
+
+.mat-accent.mat-mdc-checkbox {
+    --mdc-checkbox-selected-checkmark-color: #ffffff;
+    --mdc-checkbox-selected-icon-color: #343dff;
+    --mdc-checkbox-selected-hover-icon-color: #343dff;
+    --mdc-checkbox-selected-focus-icon-color: #343dff;
+    --mdc-checkbox-selected-pressed-icon-color: #343dff;
+    --mdc-checkbox-selected-hover-state-layer-color: #343dff;
+    --mdc-checkbox-selected-focus-state-layer-color: #343dff;
+    --mdc-checkbox-selected-pressed-state-layer-color: #343dff;
+    --mdc-checkbox-unselected-pressed-state-layer-color: #343dff;
+    --mdc-checkbox-disabled-selected-checkmark-color: #ffffff;
+    --mdc-checkbox-disabled-selected-icon-color: #343dff;
+    --mat-checkbox-disabled-label-color: #1a1b1f;
+    --mat-checkbox-label-text-color: #1a1b1f;
+    --mat-checkbox-label-text-size: 16px;
+}
+
+.slider {
+    width: 160px;
+}
+
+.slider-container {
+    margin-top: 10px;
+    margin-left: 20px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.tether {
+    width: 265px;
+    text-indent: 45px;
+}

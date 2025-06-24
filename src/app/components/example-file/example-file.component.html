@@ -1,21 +1,27 @@
-<button 
-    mat-fab 
-    extended 
-    draggable="true" 
-    color="color" 
-    [matTooltip]="tooltip" 
-    (mouseenter)="processMouseEnter($event)" 
-    (mouseleave)="processMouseLeave($event)" 
-    (dragstart)="processDragEvent($event)"
->
-    @if (type) {
-        <mat-icon>
-            article
-        </mat-icon>
-    } @else {
-        <mat-icon>
-            description
-        </mat-icon>
+<button mat-fab 
+        extended 
+        draggable="true" 
+        color="color" 
+        [matTooltip]="tooltip" 
+        (mouseenter)="processMouseEnter($event)" 
+        (mouseleave)="processMouseLeave($event)" 
+        (dragstart)="processDragEvent($event)">
+    @switch (filetype) {
+        @case ('json') {
+            <mat-icon>data_object</mat-icon>
+        }
+        @case ('pnml') {
+            <mat-icon>code</mat-icon>
+        }
+        @case ('sav') {
+            <mat-icon>description</mat-icon>
+        }
+        @case ('txt') {
+            <mat-icon>title</mat-icon>
+        }
+        @default {
+            <mat-icon>question_mark</mat-icon>
+        }
     }
     {{label}}
 </button>

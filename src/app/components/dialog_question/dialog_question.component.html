@@ -1,0 +1,31 @@
+@if (data.title) {
+    <h2 mat-dialog-title [style]="data.title.style">{{data.title.content}}</h2>
+}
+<mat-dialog-content [style]="data.style">
+    @for (line of data.message; track $index) {
+        @if (line !== undefined) {
+            <p [style]="line.style">{{line.content}}</p>
+        } @else {
+            <br style="margin-top:0px;margin-bottom:0px"/>
+        }
+    }
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+    <button mat-button 
+            [mat-dialog-close]="false">
+        @if (data.buttonFalse) {
+            {{data.buttonFalse}}
+        } @else {
+            Cancel
+        }
+    </button>
+    <div style="width:100px;"></div>
+    <button mat-button 
+            [mat-dialog-close]="true">
+        @if (data.buttonTrue) {
+            {{data.buttonTrue}}
+        } @else {
+            Confirm
+        }
+    </button>
+</mat-dialog-actions>
