@@ -165,7 +165,7 @@ export class CanvasComponent implements OnDestroy {
     /* methods : getters */
 
     public get state() : ('default' | 'error' | 'success') {
-        if (this.settingsService.state.errorButtonEnabled) {
+        if (this.settingsService.state.errorInSequence) {
             return 'error';
         } else if (this.settingsService.state.sequenceTerminated) {
             return 'success';
@@ -1068,6 +1068,8 @@ export class CanvasComponent implements OnDestroy {
                 // const canvasWidth = this.drawingArea.nativeElement.clientWidth;
                 // const canvasHeight = this.drawingArea.nativeElement.clientHeight;
                 // this.resizeNetToFitCanvas(this._net, canvasWidth, canvasHeight);
+            } else {
+                this.net = this.renderService.roundNodeCoordinates(this.net);
             };
             this.focusViewBox();
         } else {

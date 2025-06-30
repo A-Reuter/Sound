@@ -738,6 +738,11 @@ export class FileParserService {
                     throw new Error('could not parse log sequence \'' + logIdx + '\': sequence has length \'' + logEntry.length + '\'');
                 };
             };
+            if (jsonSoundSave.errors) {
+                savNet.errors = jsonSoundSave.errors;
+            } else {
+                throw new Error('could not parse errors: errors field is undefined in sav');
+            };
             return (savNet);
         } catch (error) {
             this.popupService.error('srv.fps.pss.000', 'failed to parse file content', 'consider checking the file content for structural errors');

@@ -67,18 +67,25 @@
     <div class="flex_row_align_space-between_start">
         <div class="container_canvas">
             <net-canvas id="canvas" (fileData)="processSourceChange($event)"></net-canvas>
-            @if (errorButtonEnabled && noAutorun) {
+            @if (errorSeqButton && noAutorun) {
                 <div class="container_canvas_overlay">
-                    <error-button></error-button>
+                    <error-s-button></error-s-button>
+                </div>
+            } @else if (errorNetButton && noAutorun) {
+                <div class="container_canvas_overlay">
+                    <error-n-button></error-n-button>
                 </div>
             }
         </div>
-        @if (errorInfoEnabled) {
-            <div class="gap_h_15px"></div>
-            <error-info></error-info>
-        } @else if (canvasLegendEnabled) {
+        @if (canvasLegendEnabled) {
             <div class="gap_h_15px"></div>
             <canvas-legend></canvas-legend>
+        } @else if (errorInfoNetEnabled) {
+            <div class="gap_h_15px"></div>
+            <error-info-net></error-info-net>
+        } @else if (errorInfoSeqEnabled) {
+            <div class="gap_h_15px"></div>
+            <error-info-seq></error-info-seq>
         }
     </div>
 

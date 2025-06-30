@@ -9,9 +9,9 @@ import {DisplayService} from '../../services/visualization/display.service';
 import {SettingsService} from '../../services/config/settings.service';
 
 @Component({
-    selector: 'error-button',
-    templateUrl: './error-button.component.html',
-    styleUrls: ['./error-button.component.css'],
+    selector: 'error-n-button',
+    templateUrl: './error-n-button.component.html',
+    styleUrls: ['./error-n-button.component.css'],
     standalone: true,
     imports: [
         MatIconButton,
@@ -19,7 +19,7 @@ import {SettingsService} from '../../services/config/settings.service';
         MatTooltipModule,
     ]
 })
-export class ErrorButtonComponent implements OnDestroy {
+export class ErrorNetButtonComponent implements OnDestroy {
 
     /* attributes */
 
@@ -65,7 +65,7 @@ export class ErrorButtonComponent implements OnDestroy {
         if (this._netEmpty) {
             return 'net empty';
         } else {
-            return 'show detailed information about the error';
+            return 'show information about all previous errors';
         };
     };
 
@@ -74,7 +74,8 @@ export class ErrorButtonComponent implements OnDestroy {
     public processMouseClick() {
         this.settingsService.update({
             canvasLegendEnabled : false, 
-            errorInfoEnabled : true
+            errorInfoNetEnabled : true, 
+            errorInfoSeqEnabled : false
         });
     };
 

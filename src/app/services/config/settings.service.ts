@@ -31,13 +31,21 @@ export interface Settings {
      */
     displayMode : ('default' | 'traveled' | 'errors');
     /** 
-     * specifies whether the button to display additional information about an invalid net marking is visible
+     * specifies whether the panel displaying information about previously encountered errors is visible
      */
-    errorButtonEnabled : boolean;
+    errorInfoNetEnabled : boolean;
     /** 
-     * specifies whether the panel displaying additional information about an invalid net marking is visible
+     * specifies whether the panel displaying additional information about an error within the active sequence is visible
      */
-    errorInfoEnabled : boolean;
+    errorInfoSeqEnabled : boolean;
+    /** 
+     * specifies whether an error has been found within the net
+     */
+    errorInNet : boolean;
+    /** 
+     * specifies whether an error has occurred within the active sequence
+     */
+    errorInSequence : boolean;
     /** 
      * specifies whether the prepared example files are visible
      */
@@ -49,9 +57,17 @@ export interface Settings {
      */
     executionMode : ('safe' | 'fast');
     /** 
-     * specifies whether it is possible to fire enabled transitions 
+     * specifies whether it is possible to fire enabled transitions
      */
     firingEnabled : boolean;
+    /** 
+     * specifies whether all aplace markings below one are hidden
+     */
+    hideLowMarkings : boolean;
+    /** 
+     * specifies whether all arc weights below two are hidden
+     */
+    hideLowWeights : boolean;
     /** 
      * specifies the way the user is approached to confirm an action
      * @value 'dialog' : shows a dialog window
@@ -75,39 +91,39 @@ export interface Settings {
      */
     notifyInfo : ('dialog' | 'popup' | 'toast' | 'none');
     /** 
-     * specifies whether the current firing sequence has terminated 
+     * specifies whether the current firing sequence has terminated
      */
     sequenceTerminated : boolean;
     /** 
-     * specifies whether the arc weights of a petri net displayed on the canvas are hidden 
+     * specifies whether the arc weights of a petri net displayed on the canvas are shown
      */
     showArcWeights : boolean;
     /** 
-     * specifies whether the node information panels of a petri net displayed on the canvas are hidden
+     * specifies whether the node information panels of a petri net displayed on the canvas are shown
      */
     showNodeInfos : boolean;
     /** 
-     * specifies whether the place ids of a petri net displayed on the canvas are hidden
+     * specifies whether the place ids of a petri net displayed on the canvas are shown
      */
     showPlaceIds : boolean;
     /** 
-     * specifies whether the place labels of a petri net displayed on the canvas are hidden
+     * specifies whether the place labels of a petri net displayed on the canvas are shown
      */
     showPlaceLabels : boolean;
     /** 
-     * specifies whether the place markings of a petri net displayed on the canvas are hidden
+     * specifies whether the place markings of a petri net displayed on the canvas are shown
      */
     showPlaceMarkings : boolean;
     /** 
-     * specifies whether the transition ids of a petri net displayed on the canvas are hidden
+     * specifies whether the transition ids of a petri net displayed on the canvas are shown
      */
     showTransitionIds : boolean;
     /** 
-     * specifies whether the transition labels of a petri net displayed on the canvas are hidden
+     * specifies whether the transition labels of a petri net displayed on the canvas are shown
      */
     showTransitionLabels : boolean;
     /** 
-     * specifies whether the transition tags of a petri net displayed on the canvas are hidden
+     * specifies whether the transition tags of a petri net displayed on the canvas are shown
      */
     showTransitionTags : boolean;
     /** 
@@ -178,16 +194,20 @@ export class SettingsService {
         canvasLegendEnabled             : false,
         dataLoaded                      : false,
         displayMode                     : 'default',
-        errorButtonEnabled              : false,
-        errorInfoEnabled                : false,
+        errorInfoNetEnabled             : false,
+        errorInfoSeqEnabled             : false,
+        errorInNet                      : false,
+        errorInSequence                 : false,
         exampleFilesEnabled             : true,
         executionMode                   : 'safe',
         firingEnabled                   : false,
+        hideLowMarkings                 : true,
+        hideLowWeights                  : true,
         notifyConfirm                   : 'dialog',
         notifyError                     : 'dialog',
         notifyInfo                      : 'dialog',
         sequenceTerminated              : false,
-        showArcWeights                  : false,
+        showArcWeights                  : true,
         showNodeInfos                   : false,
         showPlaceIds                    : false,
         showPlaceLabels                 : false,
@@ -195,7 +215,7 @@ export class SettingsService {
         showTransitionIds               : false,
         showTransitionLabels            : false,
         showTransitionTags              : true,
-        springEmbedderEnabled           : true,
+        springEmbedderEnabled           : false,
         springEmbedderExemptions        : true,
         springEmbedderTethering         : 'balanced',
         strictWorkflowChecks            : false,

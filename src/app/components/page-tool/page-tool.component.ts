@@ -14,8 +14,10 @@ import {CanvasLegendComponent} from '../canvas-legend/canvas-legend.component';
 import {DeleteButtonComponent} from '../button_delete-net/delete-button.component';
 import {DisplayButtonComponent} from '../button_switch-display-mode/display-button.component';
 import {EmbedderButtonComponent} from '../button_toggle-spring-embedder/embedder-button.component';
-import {ErrorButtonComponent} from '../button_error-info/error-button.component';
-import {ErrorInfoComponent} from '../error-info/error-info.component';
+import {ErrorNetButtonComponent} from '../button_error-net/error-n-button.component';
+import {ErrorNetInfoComponent} from '../error-info-net/error-info-net.component';
+import {ErrorSeqButtonComponent} from '../button_error-sequence/error-s-button.component';
+import {ErrorSeqInfoComponent} from '../error-info-seq/error-info-seq.component';
 import {ExampleFileComponent} from '../example-file/example-file.component';
 import {FilesButtonComponent} from '../button_toggle-example-files/files-button.component';
 import {FocusButtonComponent} from '../button_focus-view/focus-button.component';
@@ -46,8 +48,10 @@ import {ToastService} from '../../services/notifications/toast.service';
         DeleteButtonComponent,
         DisplayButtonComponent,
         EmbedderButtonComponent,
-        ErrorButtonComponent,
-        ErrorInfoComponent,
+        ErrorNetButtonComponent,
+        ErrorNetInfoComponent,
+        ErrorSeqButtonComponent,
+        ErrorSeqInfoComponent,
         ExampleFileComponent,
         FilesButtonComponent,
         FocusButtonComponent,
@@ -81,8 +85,10 @@ export class ToolComponent implements OnDestroy {
 
     private _autorunActive : boolean;
     private _canvasLegendEnabled : boolean;
-    private _errorButtonEnabled : boolean;
-    private _errorInfoEnabled : boolean;
+    private _errorInNet : boolean;
+    private _errorInSequence : boolean;
+    private _errorInfoNetEnabled : boolean;
+    private _errorInfoSeqEnabled : boolean;
     private _exampleFilesEnabled : boolean;
 
     /* methods - constructor */
@@ -99,8 +105,10 @@ export class ToolComponent implements OnDestroy {
         this.displayService.setToolComponent(this);
         this._autorunActive = this.settingsService.state.autorunExec;
         this._canvasLegendEnabled = this.settingsService.state.canvasLegendEnabled;
-        this._errorButtonEnabled = this.settingsService.state.errorButtonEnabled;
-        this._errorInfoEnabled = this.settingsService.state.errorInfoEnabled;
+        this._errorInNet = this.settingsService.state.errorInNet;
+        this._errorInSequence = this.settingsService.state.errorInSequence;
+        this._errorInfoNetEnabled = this.settingsService.state.errorInfoNetEnabled;
+        this._errorInfoSeqEnabled = this.settingsService.state.errorInfoSeqEnabled;
         this._exampleFilesEnabled = this.settingsService.state.exampleFilesEnabled;
         this._settingsSubscription = this.settingsService.state$.subscribe(
             state => {
@@ -110,11 +118,17 @@ export class ToolComponent implements OnDestroy {
                 if (this._canvasLegendEnabled !== state.canvasLegendEnabled) {
                     this._canvasLegendEnabled = state.canvasLegendEnabled;
                 };
-                if (this._errorButtonEnabled !== state.errorButtonEnabled) {
-                    this._errorButtonEnabled = state.errorButtonEnabled;
+                if (this._errorInfoNetEnabled !== state.errorInfoNetEnabled) {
+                    this._errorInfoNetEnabled = state.errorInfoNetEnabled;
                 };
-                if (this._errorInfoEnabled !== state.errorInfoEnabled) {
-                    this._errorInfoEnabled = state.errorInfoEnabled;
+                if (this._errorInfoSeqEnabled !== state.errorInfoSeqEnabled) {
+                    this._errorInfoSeqEnabled = state.errorInfoSeqEnabled;
+                };
+                if (this._errorInNet !== state.errorInNet) {
+                    this._errorInNet = state.errorInNet;
+                };
+                if (this._errorInSequence !== state.errorInSequence) {
+                    this._errorInSequence = state.errorInSequence;
                 };
                 if (this._exampleFilesEnabled !== state.exampleFilesEnabled) {
                     this._exampleFilesEnabled = state.exampleFilesEnabled;
@@ -149,12 +163,20 @@ export class ToolComponent implements OnDestroy {
         return this._canvasLegendEnabled;
     };
 
-    public get errorButtonEnabled() {
-        return (this._errorButtonEnabled && (!(this._errorInfoEnabled)));
+    public get errorInfoNetEnabled() {
+        return this._errorInfoNetEnabled;
     };
 
-    public get errorInfoEnabled() {
-        return this._errorInfoEnabled;
+    public get errorInfoSeqEnabled() {
+        return this._errorInfoSeqEnabled;
+    };
+
+    public get errorNetButton() {
+        return (this._errorInNet && (!(this._errorInfoNetEnabled)));
+    };
+
+    public get errorSeqButton() {
+        return (this._errorInSequence && (!(this._errorInfoSeqEnabled)));
     };
 
     public get exampleFilesEnabled() {

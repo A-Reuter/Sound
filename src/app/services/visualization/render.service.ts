@@ -37,6 +37,18 @@ export class RenderService {
 
     /* methods - other */
 
+    public roundNodeCoordinates(inoutNet : Net) : Net {
+        inoutNet.nodes.forEach(
+            node => {
+                if (node) {
+                    node.x = Math.round(node.x);
+                    node.y = Math.round(node.y);
+                };
+            }
+        );
+        return inoutNet;
+    };
+
     public orderLeftRight(inoutNet : Net) : Net {
         for (const node of inoutNet.nodes) {
             if (node) {
@@ -170,14 +182,7 @@ export class RenderService {
             };
             iteration++;
         };
-        inoutNet.nodes.forEach(
-            node => {
-                if (node) {
-                    node.x = Math.round(node.x);
-                    node.y = Math.round(node.y);
-                };
-            }
-        );
+        inoutNet = this.roundNodeCoordinates(inoutNet);
         return inoutNet;
     };
 

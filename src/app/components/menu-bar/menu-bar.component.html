@@ -122,7 +122,7 @@
                  matTooltipPosition="after" 
                  matTooltip="highlights source & sink places, aswell as enabled transitions" 
                  (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
+                <mat-checkbox class="checkbox disable-overwrite" 
                               labelPosition="after" 
                               [disabled]="displayModeDefault" 
                               [checked]="displayModeDefault" 
@@ -135,7 +135,7 @@
                  matTooltipPosition="after" 
                  matTooltip="highlights traveled paths" 
                  (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
+                <mat-checkbox class="checkbox disable-overwrite" 
                               labelPosition="after" 
                               [disabled]="displayModeTraveled" 
                               [checked]="displayModeTraveled" 
@@ -148,7 +148,7 @@
                  matTooltipPosition="after" 
                  matTooltip="highlights occurring errors" 
                  (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
+                <mat-checkbox class="checkbox disable-overwrite" 
                               labelPosition="after" 
                               [disabled]="displayModeErrors" 
                               [checked]="displayModeErrors" 
@@ -164,86 +164,132 @@
             Show / Hide Elements
         </button>
         <mat-menu #elemsMenu="matMenu">
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showArcWeights" 
-                              (change)="processElementSelection('AW', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Arc Weights
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showNodeInfos" 
-                              (change)="processElementSelection('NI', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Node Information
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showPlaceIds" 
-                              (change)="processElementSelection('PI', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Place Ids
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showPlaceLabels" 
-                              (change)="processElementSelection('PL', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Place Labels
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showPlaceMarkings" 
-                              (change)="processElementSelection('PM', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Place Markings
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showTransitionIds" 
-                              (change)="processElementSelection('TI', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Transition Ids
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showTransitionLabels" 
-                              (change)="processElementSelection('TL', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Transition Labels
-                </mat-checkbox>
-            </div>
-            <div mat-menu-item 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="showTransitionTags" 
-                              (change)="processElementSelection('TT', $event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Transition Tags
-                </mat-checkbox>
-            </div>
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="aElemsMenu">
+                Arcs
+            </button>
+            <mat-menu #aElemsMenu="matMenu">
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showArcWeights" 
+                                  (change)="processElementSelection('AW', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Arc Weights
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="!showArcWeights" 
+                                  [checked]="!hideLowWeights" 
+                                  (change)="processElementSelection('HW', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Arc Weights of 1
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="pElemsMenu">
+                Places
+            </button>
+            <mat-menu #pElemsMenu="matMenu">
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showPlaceIds" 
+                                  (change)="processElementSelection('PI', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Place Ids
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showPlaceLabels" 
+                                  (change)="processElementSelection('PL', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Place Labels
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showPlaceMarkings" 
+                                  (change)="processElementSelection('PM', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Place Markings
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [disabled]="!showPlaceMarkings" 
+                                  [checked]="!hideLowMarkings" 
+                                  (change)="processElementSelection('HM', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Place Markings of 0
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="tElemsMenu">
+                Transitions
+            </button>
+            <mat-menu #tElemsMenu="matMenu">
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showTransitionIds" 
+                                  (change)="processElementSelection('TI', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Transition Ids
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showTransitionLabels" 
+                                  (change)="processElementSelection('TL', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Transition Labels
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showTransitionTags" 
+                                  (change)="processElementSelection('TT', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Transition Tags
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+            <button mat-menu-item 
+                    [matMenuTriggerFor]="iElemsMenu">
+                Info Boxes
+            </button>
+            <mat-menu #iElemsMenu="matMenu">
+                <div mat-menu-item 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox" 
+                                  labelPosition="after" 
+                                  [checked]="showNodeInfos" 
+                                  (change)="processElementSelection('NI', $event.checked)" 
+                                  (click)="$event.stopPropagation();">
+                        Node Information
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
         </mat-menu>
         <mat-divider></mat-divider>
         <button mat-menu-item 
@@ -277,7 +323,7 @@
     <mat-menu #settingsMenu="matMenu">
         <button mat-menu-item 
                 [matMenuTriggerFor]="mdCfgMenu">
-            Display Mode
+            Display Mode Switching
         </button>
         <mat-menu #mdCfgMenu="matMenu">
             <div mat-menu-item 
@@ -331,71 +377,6 @@
         </mat-menu>
         <mat-divider></mat-divider>
         <button mat-menu-item 
-                [matMenuTriggerFor]="seCfgMenu">
-            Spring Embedder
-        </button>
-        <mat-menu #seCfgMenu="matMenu">
-            <div mat-menu-item 
-                 matTooltipPosition="after" 
-                 [matTooltip]="embedderExemptionsTooltip" 
-                 (click)="$event.stopPropagation();">
-                <mat-checkbox class="checkbox" 
-                              labelPosition="after" 
-                              [checked]="embedderExemptions" 
-                              (change)="processEmbedderUniversalAction($event.checked)" 
-                              (click)="$event.stopPropagation();">
-                    Exempt Dragged Nodes
-                </mat-checkbox>
-            </div>
-            <button mat-menu-item 
-                    class="tether" 
-                    [matMenuTriggerFor]="tetherMenu">
-                Tethering Settings
-            </button>
-            <mat-menu #tetherMenu="matMenu">
-                <div mat-menu-item 
-                     matTooltipPosition="after" 
-                     matTooltip="nodes are loosely tethered together" 
-                     (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
-                                  labelPosition="after" 
-                                  [disabled]="embedderTetheringLoose" 
-                                  [checked]="embedderTetheringLoose" 
-                                  (change)="processTetheringSelection('L')" 
-                                  (click)="$event.stopPropagation();">
-                        Loose
-                    </mat-checkbox>
-                </div>
-                <div mat-menu-item 
-                     matTooltipPosition="after" 
-                     matTooltip="nodes are moderately tethered together" 
-                     (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
-                                  labelPosition="after" 
-                                  [disabled]="embedderTetheringBalanced" 
-                                  [checked]="embedderTetheringBalanced" 
-                                  (change)="processTetheringSelection('B')" 
-                                  (click)="$event.stopPropagation();">
-                        Balanced
-                    </mat-checkbox>
-                </div>
-                <div mat-menu-item 
-                     matTooltipPosition="after" 
-                     matTooltip="nodes are more tightly tethered" 
-                     (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
-                                  labelPosition="after" 
-                                  [disabled]="embedderTetheringTight" 
-                                  [checked]="embedderTetheringTight" 
-                                  (change)="processTetheringSelection('T')" 
-                                  (click)="$event.stopPropagation();">
-                        Tight
-                    </mat-checkbox>
-                </div>
-            </mat-menu>
-        </mat-menu>
-        <mat-divider></mat-divider>
-        <button mat-menu-item 
                 [matMenuTriggerFor]="saCfgMenu">
             Sequence Automation
         </button>
@@ -433,6 +414,71 @@
         </mat-menu>
         <mat-divider></mat-divider>
         <button mat-menu-item 
+                [matMenuTriggerFor]="seCfgMenu">
+            Spring Embedder
+        </button>
+        <mat-menu #seCfgMenu="matMenu">
+            <div mat-menu-item 
+                 matTooltipPosition="after" 
+                 [matTooltip]="embedderExemptionsTooltip" 
+                 (click)="$event.stopPropagation();">
+                <mat-checkbox class="checkbox" 
+                              labelPosition="after" 
+                              [checked]="embedderExemptions" 
+                              (change)="processEmbedderUniversalAction($event.checked)" 
+                              (click)="$event.stopPropagation();">
+                    Exempt Dragged Nodes
+                </mat-checkbox>
+            </div>
+            <button mat-menu-item 
+                    class="tether" 
+                    [matMenuTriggerFor]="tetherMenu">
+                Tethering Settings
+            </button>
+            <mat-menu #tetherMenu="matMenu">
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="nodes are loosely tethered together" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox disable-overwrite" 
+                                  labelPosition="after" 
+                                  [disabled]="embedderTetheringLoose" 
+                                  [checked]="embedderTetheringLoose" 
+                                  (change)="processTetheringSelection('L')" 
+                                  (click)="$event.stopPropagation();">
+                        Loose
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="nodes are moderately tethered together" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox disable-overwrite" 
+                                  labelPosition="after" 
+                                  [disabled]="embedderTetheringBalanced" 
+                                  [checked]="embedderTetheringBalanced" 
+                                  (change)="processTetheringSelection('B')" 
+                                  (click)="$event.stopPropagation();">
+                        Balanced
+                    </mat-checkbox>
+                </div>
+                <div mat-menu-item 
+                     matTooltipPosition="after" 
+                     matTooltip="nodes are more tightly tethered" 
+                     (click)="$event.stopPropagation();">
+                    <mat-checkbox class="checkbox disable-overwrite" 
+                                  labelPosition="after" 
+                                  [disabled]="embedderTetheringTight" 
+                                  [checked]="embedderTetheringTight" 
+                                  (change)="processTetheringSelection('T')" 
+                                  (click)="$event.stopPropagation();">
+                        Tight
+                    </mat-checkbox>
+                </div>
+            </mat-menu>
+        </mat-menu>
+        <mat-divider></mat-divider>
+        <button mat-menu-item 
                 [matMenuTriggerFor]="efCfgMenu">
             Example Files
         </button>
@@ -461,7 +507,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a dialog window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyErrorDialog" 
                                   [checked]="notifyErrorDialog" 
@@ -474,7 +520,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a popup window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyErrorPopup" 
                                   [checked]="notifyErrorPopup" 
@@ -487,7 +533,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a toast message" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyErrorToast" 
                                   [checked]="notifyErrorToast" 
@@ -506,7 +552,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a dialog window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyConfirmDialog" 
                                   [checked]="notifyConfirmDialog" 
@@ -519,7 +565,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a popup window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyConfirmPopup" 
                                   [checked]="notifyConfirmPopup" 
@@ -532,7 +578,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays no window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyConfirmNone" 
                                   [checked]="notifyConfirmNone" 
@@ -551,7 +597,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a dialog window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyInfoDialog" 
                                   [checked]="notifyInfoDialog" 
@@ -564,7 +610,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a popup window" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyInfoPopup" 
                                   [checked]="notifyInfoPopup" 
@@ -577,7 +623,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays a toast message" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyInfoToast" 
                                   [checked]="notifyInfoToast" 
@@ -590,7 +636,7 @@
                      matTooltipPosition="after" 
                      matTooltip="displays no info" 
                      (click)="$event.stopPropagation();">
-                    <mat-checkbox class="checkbox" 
+                    <mat-checkbox class="checkbox disable-overwrite" 
                                   labelPosition="after" 
                                   [disabled]="notifyInfoNone" 
                                   [checked]="notifyInfoNone" 

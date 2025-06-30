@@ -50,6 +50,12 @@ export class Net {
     private _errLvl2Places : Place[];
     private _errLvl2Arcs : Arc[];
 
+    private _errors : {
+        nSeq : number,
+        iSeq : number,
+        dTrs : number
+    };
+
     /* methods : constructor */
 
     public constructor() {
@@ -85,6 +91,11 @@ export class Net {
         this._errLvl2Transitions = [];
         this._errLvl2Places = [];
         this._errLvl2Arcs = [];
+        this._errors = {
+            nSeq : 0,
+            iSeq : 0,
+            dTrs : 0
+        };
     };
 
     /* methods : getters */
@@ -224,6 +235,14 @@ export class Net {
     public get errLvl2Arcs() : Arc[] {
         return this._errLvl2Arcs;
     };
+    
+    public get errors() : {
+        nSeq : number,
+        iSeq : number,
+        dTrs : number
+    } {
+        return this._errors;
+    };
 
     /* methods : setters */
 
@@ -332,6 +351,14 @@ export class Net {
     
     public set errLvl2Arcs(inArcs : Arc[]) {
         this._errLvl2Arcs = inArcs;
+    };
+    
+    public set errors(inErrors : {
+        nSeq : number,
+        iSeq : number,
+        dTrs : number
+    }) {
+        this._errors = inErrors;
     };
 
     /* methods : other */

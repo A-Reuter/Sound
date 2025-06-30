@@ -11,16 +11,16 @@ import {SettingsService} from '../../services/config/settings.service';
 import {SimulationService} from '../../services/logic/simulation.service';
 
 @Component({
-    selector: 'error-info',
-    templateUrl: './error-info.component.html',
-    styleUrls: ['./error-info.component.css'],
+    selector: 'error-info-seq',
+    templateUrl: './error-info-seq.component.html',
+    styleUrls: ['./error-info-seq.component.css'],
     standalone: true,
     imports: [
         MatIconButton,
         MatIconModule
     ]
 })
-export class ErrorInfoComponent implements OnDestroy {
+export class ErrorSeqInfoComponent implements OnDestroy {
 
     /* properties */
 
@@ -87,13 +87,13 @@ export class ErrorInfoComponent implements OnDestroy {
         inKeyboardEvent.preventDefault();
         if (this._hovered) {
             if (inKeyboardEvent.key === 'Escape') {
-                this.settingsService.update({errorInfoEnabled : false})
+                this.settingsService.update({errorInfoSeqEnabled : false})
             };
         };
     };
 
     public processButtonClick() {
-        this.settingsService.update({errorInfoEnabled : false});
+        this.settingsService.update({errorInfoSeqEnabled : false});
     };
 
 };

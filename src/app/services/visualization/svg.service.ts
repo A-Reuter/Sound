@@ -22,15 +22,17 @@ export class SvgService implements OnDestroy {
     
     private net : Net = new Net();
 
-    private displayMode : ('default' | 'traveled' | 'errors') = 'default';
-    private showArcWeights : boolean = false;
-    private showNodeInfos : boolean = false;
-    private showPlaceIds : boolean = false;
-    private showPlaceLabels : boolean = false;
-    private showPlaceMarkings : boolean = true;
-    private showTransitionIds : boolean = false;
-    private showTransitionLabels : boolean = false;
-    private showTransitionTags : boolean = true;
+    private displayMode : ('default' | 'traveled' | 'errors');
+    private hideLowMarkings : boolean;
+    private hideLowWeights : boolean;
+    private showArcWeights : boolean;
+    private showNodeInfos : boolean;
+    private showPlaceIds : boolean;
+    private showPlaceLabels : boolean;
+    private showPlaceMarkings : boolean;
+    private showTransitionIds : boolean;
+    private showTransitionLabels : boolean;
+    private showTransitionTags : boolean;
 
     private viewBox : {
         origin_x : number, 
@@ -65,11 +67,22 @@ export class SvgService implements OnDestroy {
         private readonly popupService : PopupService,
         private readonly settingsService: SettingsService,
     ) {
+        this._arrowSVG = this.initArrow();
+        this._infosSVG = this.initInfos();
         this._nodeRadius = this.graphicsConfigService.defaultNodeRadius;
         this._logEntryFrame = (this.graphicsConfigService.defaultOuterLogStrokeWidth * 3);
         this._logEntryHeight = (2 * (this.graphicsConfigService.defaultInnerLogElementRadius + this._logEntryFrame));
-        this._arrowSVG = this.initArrow();
-        this._infosSVG = this.initInfos();
+        this.displayMode = this.settingsService.state.displayMode;
+        this.hideLowMarkings = this.settingsService.state.hideLowMarkings;
+        this.hideLowWeights = this.settingsService.state.hideLowWeights;
+        this.showArcWeights = this.settingsService.state.showArcWeights;
+        this.showNodeInfos = this.settingsService.state.showNodeInfos;
+        this.showPlaceIds = this.settingsService.state.showPlaceIds;
+        this.showPlaceLabels = this.settingsService.state.showPlaceLabels;
+        this.showPlaceMarkings = this.settingsService.state.showPlaceMarkings;
+        this.showTransitionIds = this.settingsService.state.showTransitionIds;
+        this.showTransitionLabels = this.settingsService.state.showTransitionLabels;
+        this.showTransitionTags = this.settingsService.state.showTransitionTags;
         this._netSubscription = this.displayService.net$.subscribe(
             net => {
                 this.net = this.displayService.net;
@@ -80,6 +93,14 @@ export class SvgService implements OnDestroy {
                 if (this.displayMode !== state.displayMode) {
                     this.displayMode = state.displayMode;
                     this.toggleDispayMode();
+                };
+                if (this.hideLowMarkings !== state.hideLowMarkings) {
+                    this.hideLowMarkings = state.hideLowMarkings;
+                    this.togglePlaceMarkings();
+                };
+                if (this.hideLowWeights !== state.hideLowWeights) {
+                    this.hideLowWeights = state.hideLowWeights;
+                    this.toggleArcWeights();
                 };
                 if (this.showArcWeights !== state.showArcWeights) {
                     this.showArcWeights = state.showArcWeights;
@@ -505,6 +526,8 @@ export class SvgService implements OnDestroy {
                     svgLabel.setAttribute('lengthAdjust', 'spacingAndGlyphs');
                     svgLabel.setAttribute('x', `${width + radius - offsetS}`);
                 } else {
+                    svgLabel.removeAttribute('textLength');
+                    svgLabel.removeAttribute('lengthAdjust');
                     svgLabel.setAttribute('x', `${width + radius - offsetM}`);
                 };
             };
@@ -638,12 +661,16 @@ export class SvgService implements OnDestroy {
         if (symbol.textContent.length > 1) {
             if (symbol.textContent.length > 2) {
                 symbol.setAttribute('textLength', '30');
-                symbol.setAttribute('lengthAdjust', 'spacingAndGlyphs');
                 background.setAttribute('textLength', '30');
+                symbol.setAttribute('lengthAdjust', 'spacingAndGlyphs');
                 background.setAttribute('lengthAdjust', 'spacingAndGlyphs');
                 symbol.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.minimalNodeSymbolOffset}`);
                 background.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.minimalNodeSymbolOffset}`);
             } else {
+                symbol.removeAttribute('textLength');
+                background.removeAttribute('textLength');
+                symbol.removeAttribute('lengthAdjust');
+                background.removeAttribute('lengthAdjust');
                 symbol.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.reducedNodeSymbolOffset}`);
                 background.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.reducedNodeSymbolOffset}`);
             };
@@ -744,6 +771,9 @@ export class SvgService implements OnDestroy {
         if (text1.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text1.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text1.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        } else {
+            text1.removeAttribute('textLength');
+            text1.removeAttribute('lengthAdjust');
         };
         cont.appendChild(text1);
         const text2 : SVGElement = this.createSvgElement('text');
@@ -756,6 +786,9 @@ export class SvgService implements OnDestroy {
         if (text2.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text2.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text2.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        } else {
+            text2.removeAttribute('textLength');
+            text2.removeAttribute('lengthAdjust');
         };
         cont.appendChild(text2);
         const text3 : SVGElement = this.createSvgElement('text');
@@ -768,6 +801,9 @@ export class SvgService implements OnDestroy {
         if (text3.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text3.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text3.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        } else {
+            text3.removeAttribute('textLength');
+            text3.removeAttribute('lengthAdjust');
         };
         cont.appendChild(text3);
         const text4 : SVGElement = this.createSvgElement('text');
@@ -837,6 +873,9 @@ export class SvgService implements OnDestroy {
         if (text1.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text1.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text1.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        } else {
+            text1.removeAttribute('textLength');
+            text1.removeAttribute('lengthAdjust');
         };
         cont.appendChild(text1);
         const text2 : SVGElement = this.createSvgElement('text');
@@ -849,6 +888,9 @@ export class SvgService implements OnDestroy {
         if (text2.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text2.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text2.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        } else {
+            text2.removeAttribute('textLength');
+            text2.removeAttribute('lengthAdjust');
         };
         cont.appendChild(text2);
         const text3 : SVGElement = this.createSvgElement('text');
@@ -861,6 +903,9 @@ export class SvgService implements OnDestroy {
         if (text3.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text3.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text3.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+        } else {
+            text3.removeAttribute('textLength');
+            text3.removeAttribute('lengthAdjust');
         };
         cont.appendChild(text3);
         const text4 : SVGElement = this.createSvgElement('text');
@@ -1042,7 +1087,11 @@ export class SvgService implements OnDestroy {
         const svg : (SVGElement | undefined) = inPlace.svgElements.symbol;
         if (svg) {
             if (this.showPlaceMarkings) {
-                svg.setAttribute('visibility', 'visible');
+                if ((this.hideLowMarkings) && (inPlace.marking < 1)) {
+                    svg.setAttribute('visibility', 'hidden');
+                } else {
+                    svg.setAttribute('visibility', 'visible');
+                };
             } else {
                 svg.setAttribute('visibility', 'hidden');
             };
@@ -1064,6 +1113,10 @@ export class SvgService implements OnDestroy {
                     bg.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.minimalNodeSymbolOffset}`);
                     txt.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.minimalNodeSymbolOffset}`);
                 } else {
+                    bg.removeAttribute('textLength');
+                    txt.removeAttribute('textLength');
+                    bg.removeAttribute('lengthAdjust');
+                    txt.removeAttribute('lengthAdjust');
                     bg.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.reducedNodeSymbolOffset}`);
                     txt.setAttribute('x', `${this.graphicsConfigService.defaultNodeRadius - this.graphicsConfigService.reducedNodeSymbolOffset}`);
                 };
@@ -1100,6 +1153,9 @@ export class SvgService implements OnDestroy {
             if (svg.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
                 svg.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
                 svg.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+            } else {
+                svg.removeAttribute('textLength');
+                svg.removeAttribute('lengthAdjust');
             };
         };
     };
@@ -1111,6 +1167,9 @@ export class SvgService implements OnDestroy {
             if (svg.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
                 svg.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
                 svg.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+            } else {
+                svg.removeAttribute('textLength');
+                svg.removeAttribute('lengthAdjust');
             };
         };
     };
@@ -1218,6 +1277,9 @@ export class SvgService implements OnDestroy {
             if (svg.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
                 svg.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
                 svg.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+            } else {
+                svg.removeAttribute('textLength');
+                svg.removeAttribute('lengthAdjust');
             };
         };
     };
@@ -1229,6 +1291,9 @@ export class SvgService implements OnDestroy {
             if (svg.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
                 svg.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
                 svg.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+            } else {
+                svg.removeAttribute('textLength');
+                svg.removeAttribute('lengthAdjust');
             };
         };
     };
@@ -1413,7 +1478,11 @@ export class SvgService implements OnDestroy {
         const svg : (SVGElement | undefined) = inArc.svgElements.weight;
         if (svg) {
             if (this.showArcWeights) {
-                svg.setAttribute('visibility', 'visible');
+                if ((this.hideLowWeights) && (inArc.weight < 2)) {
+                    svg.setAttribute('visibility', 'hidden');
+                } else {
+                    svg.setAttribute('visibility', 'visible');
+                };
             } else {
                 svg.setAttribute('visibility', 'hidden');
             };

@@ -5,7 +5,7 @@
         <div class="flex-row_space-between_start">
             <div class="flex-row_space-evenly_start">
                 <mat-icon class="title-icon">warning_amber</mat-icon>
-                <h1 class="title">Error List</h1>
+                <h1 class="title">Latest Errors</h1>
             </div>
             <button mat-icon-button
                     class="close-button" 
@@ -21,11 +21,13 @@
                         <p class="text">{{item}}</p>
                     }
                 } @else if (bucket.type === 'list') {
-                    @for (item of bucket.items; track $index) {
-                        <li class="list">
-                            <span class="text">{{item}}</span>
-                        </li>
-                    }
+                    <ul>
+                        @for (item of bucket.items; track $index) {
+                            <li class="list">
+                                <span class="text">{{item}}</span>
+                            </li>
+                        }
+                    </ul>
                 }
                 @if (bucket.ending) {
                     <br>

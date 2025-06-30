@@ -1,0 +1,16 @@
+<div class="container">
+    <button 
+        mat-icon-button
+        class="button" 
+        matTooltipShowDelay="500" 
+        matTooltipPosition="left" 
+        [matTooltip]="tooltip" 
+        [disabled]="disabled" 
+        (click)="processMouseClick()"
+    >
+        <mat-icon>warning</mat-icon>
+    </button>
+    <div class="container-overlay-icon">
+        <mat-icon class="overlay-icon">warning_amber</mat-icon>
+    </div>
+</div>

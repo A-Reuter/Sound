@@ -1,0 +1,57 @@
+<div class="info-panel"
+     (mouseenter)="processMouseEnter()"
+     (mouseleave)="processMouseLeave()">
+    <div class="frame">
+        <div class="flex-row_space-between_start">
+            <div class="flex-row_space-evenly_start">
+                <mat-icon class="title-icon">warning_amber</mat-icon>
+                <h1 class="title">All Errors</h1>
+            </div>
+            <button mat-icon-button
+                    class="close-button" 
+                    (click)="processButtonClick()">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+        </div>
+        @if (errorsFound) {
+            <h3 class="title">net is not sound</h3>
+            <ul>
+                @if (foundErrors.nSeq > 0) {
+                    @if (foundErrors.nSeq > 1) {
+                        <li class="list">
+                            <span class="text">{{foundErrors.nSeq}} non-terminating sequences found</span>
+                        </li>
+                    } @else {
+                        <li class="list">
+                            <span class="text">{{foundErrors.nSeq}} non-terminating sequence found</span>
+                        </li>
+                    }
+                }
+                @if (foundErrors.iSeq > 0) {
+                    @if (foundErrors.iSeq > 1) {
+                        <li class="list">
+                            <span class="text">{{foundErrors.iSeq}} incorrectly terminating sequences found</span>
+                        </li>
+                    } @else {
+                        <li class="list">
+                            <span class="text">{{foundErrors.iSeq}} incorrectly terminating sequence found</span>
+                        </li>
+                    }
+                }
+                @if (foundErrors.dTrs > 0) {
+                    @if (foundErrors.dTrs > 1) {
+                        <li class="list">
+                            <span class="text">{{foundErrors.dTrs}} dead transitions found</span>
+                        </li>
+                    } @else {
+                        <li class="list">
+                            <span class="text">{{foundErrors.dTrs}} dead transition found</span>
+                        </li>
+                    }
+                }
+            </ul>
+        } @else {
+            <font>(no errors found)</font>
+        }
+    </div>
+</div>

@@ -60,3 +60,8 @@ ul {
     margin-left: -20px;
     margin-bottom: 0px;
 }
+
+a {
+    font-style: italic;
+    text-decoration: none;
+}

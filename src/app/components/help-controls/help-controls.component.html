@@ -24,6 +24,7 @@
             <h4>Error Information</h4>
             <div class="margin">
                 <p>whenever an error occurs, a panel containing additional information can be accessed using the <b>Question Mark</b> button which appears in the top right corner of the canvas</p>
+                <p>after at least one error has occurred, a panel containing information about previously encountered errors can be accessed using the <b>Warning</b> button which appears in the same location</p>
             </div>
         </div>
         <h3>File Loading</h3>
@@ -34,7 +35,7 @@
                 <p style="margin-bottom:7px;">certain restrictions apply regarding individual formats:</p>
                 <ul class="indent-105">
                     <li><span class="highlight">pnml&nbsp;&nbsp;&nbsp;&nbsp;</span> - all files adhering to the 2009 version of the Petri Net Markup Language grammar should work without issue</li>
-                    <li><span class="highlight">json,txt</span> - only supports certain proprietary formats generated and exported by various tools available on the <i>ilovepetrinets</i> page</li>
+                    <li><span class="highlight">json,txt</span> - only supports certain proprietary formats generated and exported by various tools available on the <a href="https://www.fernuni-hagen.de/ilovepetrinets/">ilovepetrinets</a> page</li>
                     <li><span class="highlight">sav&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> - used for exporting and reimporting savestates of this application, will not work with any other sav files</li>
                 </ul>
             </div>
@@ -93,11 +94,11 @@
             <ul>
                 <li>to fire an enabled transition, hover over it and press the primary (left) mouse button</li>
             </ul>
-            <h4>undoing a firing action / skipping backward</h4>
+            <h4>undoing a firing action</h4>
             <ul>
                 <li>to roll back a previously executed firing action, press the <b>Back</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
             </ul>
-            <h4>redoing a firing action / skipping forward</h4>
+            <h4>redoing a firing action</h4>
             <ul>
                 <li>to restore a previously undone firing action, press the <b>Forward</b> button located centrally above the canvas, or use the <b>Redo Step</b> option within the <b>Edit</b> menu</li>
             </ul>
@@ -108,12 +109,19 @@
             <h4>loading a log sequence</h4>
             <ul>
                 <li>to load a sequence from the log, hover over it and press the primary (left) mouse button</li>
+                <li>sequences which terminate successfully are framed in green, sequences leading to an invalid marking are framed in red</li>
+            </ul>
+            <h4>retracing a log sequence</h4>
+            <ul>
+                <li>sequences loaded from the log always start with the net in the initial state</li>
+                <li>to skip forward within a sequence loaded from the log, press the <b>Forward</b> button located centrally above the canvas, or use the <b>Redo Step</b> option within the <b>Edit</b> menu</li>
+                <li>to skip backward within a sequence loaded from the log, press the <b>Back</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
             </ul>
             <h4>automating sequence execution</h4>
             <ul>
                 <li>to start the automated execution of random firing sequences, press the <b>Play</b> button located centrally above the canvas, or use the <b>Start Automation</b> option within the <b>Edit</b> menu</li>
                 <li>the algorithm will generate sequences by repeatedly choosing a random transition from all enabled transitions and firing it</li>
-                <li>when a sequence terminates, the algorithm will reset the net and start a new sequence, looping until it is manually stopped</li>
+                <li>when a sequence terminates, the algorithm will reset the net and begin a new sequence, looping until it is manually stopped</li>
             </ul>
         </div>
     </div>

@@ -55,7 +55,7 @@ export class LegendButtonComponent implements OnDestroy {
 
     public get tooltip() {
         if (this._legendEnabled) {
-            return '';
+            return 'close color legend';
         } else {
             return 'canvas color legend';
         };
@@ -70,8 +70,9 @@ export class LegendButtonComponent implements OnDestroy {
             });
         } else {
             this.settingsService.update({
-                errorInfoEnabled : false, 
-                canvasLegendEnabled : true
+            canvasLegendEnabled : true, 
+            errorInfoNetEnabled : false, 
+            errorInfoSeqEnabled : false
             });
         };
     };

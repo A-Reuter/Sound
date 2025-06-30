@@ -69,6 +69,12 @@ export interface JsonSoundSave {
         fired : string,
         added : string[],
         valid : boolean
-    }[][]
+    }[][],
+
+    errors : {
+        nSeq : number,
+        iSeq : number,
+        dTrs : number
+    }
 
 }

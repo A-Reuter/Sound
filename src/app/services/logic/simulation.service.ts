@@ -1,4 +1,4 @@
-import {Injectable, input, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 
@@ -36,25 +36,18 @@ export class SimulationService implements OnDestroy {
     private readonly _errorInfoSubject = (new BehaviorSubject<ErrorInfo>(this._defaultErrorInfo));
     private readonly _errorInfo$: Observable<ErrorInfo> = this._errorInfoSubject.asObservable();
 
+    private readonly _errorsSubject = (new BehaviorSubject<{nSeq:number,iSeq:number,dTrs:number}>({nSeq:0,iSeq:0,dTrs:0}));
+    private readonly _errors$: Observable<{nSeq:number,iSeq:number,dTrs:number}> = this._errorsSubject.asObservable();
+
     private readonly _workflowSubject = (new BehaviorSubject<boolean>(false));
     private readonly _workflow$: Observable<boolean> = this._workflowSubject.asObservable();
+
+    private _foundError : ('noTermination' | 'invalidTermination' | 'deadTransitions' | 'noError') = 'noError';
 
     private _strictWorkflowChecksEnabled : boolean;
     private _workflowInvalidArcs : Arc[] = [];
 
     private _deadTransitions : Transition[] = [];
-    private _deadDiscovered : boolean = false;
-    private _deadStep : number = 0;
-    private _deadSequence : {
-        firedTransition : Transition,
-        addedToSequence : (Transition | Place | Arc)[],
-        markingValidity : boolean
-    }[] = [];
-    private _deadExtension : ({
-        firedTransition : Transition,
-        addedToSequence : (Transition | Place | Arc)[],
-        markingValidity : boolean
-    } | undefined) = undefined;
 
     private _modeAutoChanged : boolean = false;
     private _previousMode : ('default' | 'traveled' | 'errors') = 'default';
@@ -64,8 +57,6 @@ export class SimulationService implements OnDestroy {
     private _currentlyEnabled : Transition[] = [];
 
     private _initializedState : boolean = false;
-
-    private I : number = 0
 
     /* methods : constructor */
 
@@ -81,21 +72,25 @@ export class SimulationService implements OnDestroy {
             net => {
                 this.net = this.displayService.net;
                 this.settingsService.update({
-                    errorButtonEnabled : false, 
-                    errorInfoEnabled : false, 
+                    errorInfoNetEnabled : false,
+                    errorInfoSeqEnabled : false, 
+                    errorInSequence : false, 
                     firingEnabled : false, 
                     sequenceTerminated : false
                 });
+                if ((this.net.errors.nSeq > 0) || (this.net.errors.iSeq > 0) || (this.net.errors.dTrs > 0)) {
+                    this.settingsService.update({errorInNet : true});
+                } else {
+                    this.settingsService.update({errorInNet : false});
+                };
                 if (this.settingsService.state.switchDisplayModeOnLoadFromFile) {
                     this.settingsService.update({displayMode : 'default'});
                 };
-                this.updateErrorInfo(this._defaultErrorInfo);
+                this._errorInfoSubject.next(this._defaultErrorInfo);
+                this._errorsSubject.next(this.net.errors);
+                this._foundError = 'noError';
                 this._workflowInvalidArcs = [];
                 this._deadTransitions = [];
-                this._deadDiscovered = false;
-                this._deadStep = 0;
-                this._deadSequence = [];
-                this._deadExtension = undefined;
                 if (this.net.empty) {
                     this._currentlyEnabled = [];
                     this._initializedState = true;
@@ -104,7 +99,7 @@ export class SimulationService implements OnDestroy {
                     this.setSpecialPlaces();
                     const workflow : boolean = this.testWorkflow();
                     if (workflow) {
-                        this._deadTransitions = this.testCoverabilityGraph().dead;
+                        this._deadTransitions = this.testCoverability().dead;
                         this.testMarking();
                     } else {
                         this.testEnabled();
@@ -131,6 +126,14 @@ export class SimulationService implements OnDestroy {
         return this._errorInfo$;
     };
         
+    public get errors() : {nSeq:number,iSeq:number,dTrs:number} {
+        return this._errorsSubject.getValue();
+    };
+        
+    public get errors$() : Observable<{nSeq:number,iSeq:number,dTrs:number}> {
+        return this._errors$
+    };
+        
     public get workflow() : boolean {
         return this._workflowSubject.getValue();
     };
@@ -147,10 +150,6 @@ export class SimulationService implements OnDestroy {
 
     public registerLogComponent(inComponent : LogComponent) {
         this.logComponent = inComponent;
-    };
-    
-    private updateErrorInfo(inInfo : ErrorInfo) : void {
-        this._errorInfoSubject.next(inInfo);
     };
 
     private setSpecialPlaces() : void {
@@ -443,13 +442,13 @@ export class SimulationService implements OnDestroy {
             };
         };
         if (error) {
-            this.updateErrorInfo(new ErrorInfo([new ErrorParagraph('net is not a workflow net', errorArray)]));
+            this._errorInfoSubject.next(new ErrorInfo([new ErrorParagraph('net is not a workflow net', errorArray)]));
             if (this.settingsService.state.switchDisplayModeOnError) {
                 this._previousMode = this.settingsService.state.displayMode;
                 this.settingsService.update({displayMode : 'errors'});
                 this._modeAutoChanged = true;
             };
-            this.settingsService.update({errorButtonEnabled : true});
+            this.settingsService.update({errorInSequence : true});
             this.net.workflow = false;
             this._workflowSubject.next(false);
             if (this.settingsService.state.tutorialErr === false) {
@@ -497,14 +496,14 @@ export class SimulationService implements OnDestroy {
             };
             return false;
         } else {
-            this.updateErrorInfo(new ErrorInfo([new ErrorParagraph('net is a workflow net', errorArray)]));
+            this._errorInfoSubject.next(new ErrorInfo([new ErrorParagraph('net is a workflow net', errorArray)]));
             this.net.workflow = true;
             this._workflowSubject.next(true);
             return true;
         };
     };
 
-    private testCoverabilityGraph() : {
+    private testCoverability() : {
         dead : Transition[]
     } {
         type State = {
@@ -527,6 +526,11 @@ export class SimulationService implements OnDestroy {
         for (const transition of this.net.transitions) {
             unfiredTransitions.push(transition);
         };
+        // 
+        // /* do not remove - alternative implementation (test all states for omega) */
+        // 
+        // let omega : boolean = false;
+        // while (uncheckedStates.length > 0) {
         while ((uncheckedStates.length > 0) && (unfiredTransitions.length > 0)) {
             let state : (AdvState | undefined) = uncheckedStates.pop();
             if (state === undefined) {
@@ -584,6 +588,10 @@ export class SimulationService implements OnDestroy {
                     if (greaterMarking) {
                         for (const id of toInfinitePlaceIds) {
                             followState[id] = 'infinite';
+                            // 
+                            // /* do not remove - alternative implementation (test all states for omega) */
+                            // 
+                            // omega = true;
                         };
                     };
                 };
@@ -645,15 +653,21 @@ export class SimulationService implements OnDestroy {
             };
             checkedStates.push(state);
         };
+        // 
+        // /* do not remove - alternative implementation (test all states for omega) */
+        // 
+        // if (omega) {
+        //     console.debug('omega state found while testing coverability')
+        // };
         return {dead : unfiredTransitions};
     };
 
-    private testMarking(
-        inSkipDeadCheck? : boolean
-    ) : {
+    private testMarking() : {
         sequenceTerminated : boolean,
         validMarking : boolean
     } {
+        this.testInitialMarking();
+        this._foundError = 'noError';
         const errorArray : ErrorItemBucket[] = [];
         if (this.net.sourcePlaces.length !== 1) {
             this.popupService.error('srv.sim.tmk.000', 'inconsistent internal data state', 'it is recommended to restart the tool');
@@ -671,8 +685,8 @@ export class SimulationService implements OnDestroy {
             validMarking : false,
             sequenceTerminated : false
         };
+        const enabled : number = this.testEnabled();
         if (sink.marking > 0) {
-            this.testEnabled();
             const invalidPlaces : Place[] = [];
             for (const place of this.net.places) {
                 if (place === sink) {
@@ -684,13 +698,13 @@ export class SimulationService implements OnDestroy {
             };
             if (invalidPlaces.length > 0) {
                 if (sink.marking > 1) {
-                    errorArray.push(new ErrorItemBucket('text', ['', 'process terminated incorrectly: the reached marking contains more than one token on the sink place'], false));
+                    errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 2 not met - the process terminated incorrectly: the reached marking contains more than one token on the sink place'], false));
                     errorArray.push(new ErrorItemBucket('list', ['sink place with id ' + sink.id + ' - marking of ' + sink.marking + ' (should be 1)'], true));
                     this.svgService.setElementErrLvl2Flag(sink, true);
                 } else {
                     this.svgService.setElementErrLvl1Flag(sink, true);
                 };
-                errorArray.push(new ErrorItemBucket('text', ['', 'process terminated incorrectly: the reached marking contains a token on the sink place while there are other marked places'], false));
+                errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 2 not met - the process terminated incorrectly: the reached marking contains a token on the sink place while there are other marked places'], false));
                 const errorItems : string[] = [];
                 for (const place of invalidPlaces) {
                     errorItems.push('place with id ' + place.id + ' - marking of ' + place.marking + ' (should be 0)');
@@ -699,24 +713,26 @@ export class SimulationService implements OnDestroy {
                 errorArray.push(new ErrorItemBucket('list', errorItems, true));
                 result.validMarking = false;
                 result.sequenceTerminated = true;
+                this._foundError = 'invalidTermination';
             } else {
                 if (sink.marking > 1) {
-                    errorArray.push(new ErrorItemBucket('text', ['', 'process terminated incorrectly: the reached marking contains more than one token on the sink place'], false));
+                    errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 2 not met - the process terminated incorrectly: the reached marking contains more than one token on the sink place'], false));
                     errorArray.push(new ErrorItemBucket('list', ['sink place with id ' + sink.id + ' - marking of ' + sink.marking + ' (should be 1)'], true));
                     this.svgService.setElementErrLvl2Flag(sink, true);
                     result.validMarking = false;
                     result.sequenceTerminated = true;
+                    this._foundError = 'invalidTermination';
                 } else {
                     result.validMarking = true;
                     result.sequenceTerminated = true;
                 };
             };
         } else {
-            if (this.testEnabled() > 0) {
+            if (enabled > 0) {
                 result.validMarking = true;
                 result.sequenceTerminated = false;
             } else {
-                errorArray.push(new ErrorItemBucket('text', ['', 'process cannot terminate: the reached marking does not enable any transitions'], true));
+                errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 1 not met - the process cannot terminate: the reached marking does not enable any transitions'], true));
                 for (const place of this.net.places) {
                     if (place.marking > 0) {
                         this.svgService.setElementErrLvl2Flag(place, true);
@@ -725,130 +741,82 @@ export class SimulationService implements OnDestroy {
                 this.svgService.setElementErrLvl1Flag(sink, true);
                 result.validMarking = false;
                 result.sequenceTerminated = true;
+                this._foundError = 'noTermination';
             };
         };
-        let enterLoop : boolean = true;
-        if (inSkipDeadCheck) {
-            enterLoop = false;
-        };
-        if ((this._deadTransitions.length > 0) && (enterLoop)) {
-            let deadRepeat : boolean = false;
-            if ((this._deadDiscovered) && (this.net.nextSequenceEntry === this._deadStep)) {
-                let sequencesEqual : boolean = true;
-                if (this._deadExtension) {
-                    this.net.activeSequence.push(this._deadExtension);
+        let notDead = true;
+        if ((this._deadTransitions.length > 0) && (result.sequenceTerminated)) {
+            let noLiveUntraveled : boolean = true;
+            for (const transition of this.net.transitions) {
+                let notDead : boolean = true;
+                for (const dead of this._deadTransitions) {
+                    if (transition === dead) {
+                        notDead = false;
+                        break;
+                    };
                 };
-                if (this.net.activeSequence.length !== this._deadSequence.length) {
-                    sequencesEqual = false;
+                if (notDead) {
+                    if ((!(transition.inSequenceLog)) && (!(transition.inSequencePast))) {
+                        noLiveUntraveled = false;
+                        break;
+                    };
                 } else {
-                    for (let seqIdx = 0; seqIdx < this.net.activeSequence.length; seqIdx++) {
-                        if (this.net.activeSequence[seqIdx].firedTransition !== this._deadSequence[seqIdx].firedTransition) {
-                            sequencesEqual = false;
-                            break;
-                        } else {
-                            if (this.net.activeSequence[seqIdx].addedToSequence.length !== this._deadSequence[seqIdx].addedToSequence.length) {
-                                sequencesEqual = false;
-                                break;
-                            } else {
-                                if (this.settingsService.state.executionMode === 'safe') {
-                                    for (let atsIdx = 0; atsIdx < this.net.activeSequence[seqIdx].addedToSequence.length; atsIdx++) {
-                                        if (this.net.activeSequence[seqIdx].addedToSequence[atsIdx] !== this._deadSequence[seqIdx].addedToSequence[atsIdx]) {
-                                            sequencesEqual = false;
-                                            break;
-                                        };
-                                    };
-                                    if (!sequencesEqual) {
-                                        break;
-                                    };
-                                };
-                                if (this.net.activeSequence[seqIdx].markingValidity !== this._deadSequence[seqIdx].markingValidity) {
-                                    sequencesEqual = false;
-                                    break;
-                                };
-                            };
-                        };
+                    if ((transition.inSequenceLog) || (transition.inSequencePast) || (transition.inSequenceNext)) {
+                        this.popupService.error('srv.sim.tmk.002', 'inconsistent internal data state', 'it is recommended to restart the tool');
+                        throw new Error('#srv.sim.tmk.002: ' + 'marking test failed - dead transition is flagged as part of a sequence');
                     };
+                    this._foundError = 'deadTransitions';
                 };
-                if (this._deadExtension) {
-                    this.net.activeSequence.pop();
-                };
-                deadRepeat = sequencesEqual;
             };
-            if (!(this._deadDiscovered) || deadRepeat) {
-                let noLiveUntraveled : boolean = true;
-                for (const transition of this.net.transitions) {
-                    let notDead : boolean = true;
+            if (noLiveUntraveled) {
+                if (this._deadTransitions.length === 1) {
+                    errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 3 not met - an activity of the process is not executable: the net contains a dead transition'], false));
+                    errorArray.push(new ErrorItemBucket('list', ['transition with id ' + this._deadTransitions[0].id + ''], true));
+                    this.svgService.setElementErrLvl2Flag(this._deadTransitions[0], true);
+                } else {
+                    errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 3 not met - multiple activities of the process are not executable: the net contains dead transitions'], false));
+                    const errorItems : string[] = [];
                     for (const dead of this._deadTransitions) {
-                        if (transition === dead) {
-                            notDead = false;
-                            break;
-                        };
+                        errorItems.push('transition with id ' + dead.id + '');
+                        this.svgService.setElementErrLvl2Flag(dead, true);
                     };
-                    if (notDead) {
-                        if ((!(transition.inSequenceLog)) && (!(transition.inSequencePast))) {
-                            noLiveUntraveled = false;
-                            break;
-                        };
-                    } else {
-                        if ((transition.inSequenceLog) || (transition.inSequencePast) || (transition.inSequenceNext)) {
-                            this.popupService.error('srv.sim.tmk.005', 'inconsistent internal data state', 'it is recommended to restart the tool');
-                            throw new Error('#srv.sim.tmk.005: ' + 'marking test failed - dead transition is flagged as part of a sequence');
-                        };
-                    };
+                    errorArray.push(new ErrorItemBucket('list', errorItems, true));
                 };
-                if (noLiveUntraveled) {
-                    if (this._deadTransitions.length === 1) {
-                        errorArray.push(new ErrorItemBucket('text', ['', 'process includes an activity that can never be executed: the net contains a dead transition'], false));
-                        errorArray.push(new ErrorItemBucket('list', ['transition with id ' + this._deadTransitions[0].id + ''], true));
-                        this.svgService.setElementErrLvl2Flag(this._deadTransitions[0], true);
-                    } else {
-                        errorArray.push(new ErrorItemBucket('text', ['', 'process includes activities that can never be executed: the net contains dead transitions'], false));
-                        const errorItems : string[] = [];
-                        for (const dead of this._deadTransitions) {
-                            errorItems.push('transition with id ' + dead.id + '');
-                            this.svgService.setElementErrLvl2Flag(dead, true);
-                        };
-                        errorArray.push(new ErrorItemBucket('list', errorItems, true));
-                    };
-                    this._deadDiscovered = true;
-                    this._deadStep = this.net.nextSequenceEntry;
-                    result.validMarking = false;
-                    result.sequenceTerminated = true;
-                };
+                notDead = false;
             };
         };
-        if (result.validMarking) {
-            this.updateErrorInfo(new ErrorInfo([new ErrorParagraph('marking does not contradict soundness', errorArray)]));
+        if ((result.validMarking) && (notDead)) {
+            this._errorInfoSubject.next(new ErrorInfo([new ErrorParagraph('marking does not contradict soundness', errorArray)]));
             if ((this.settingsService.state.switchDisplayModeOnError) && (this._modeAutoChanged)) {
                 this.settingsService.update({displayMode : this._previousMode});
                 this._modeAutoChanged = false;
             };
             if (result.sequenceTerminated) {
                 this.settingsService.update({
-                    errorButtonEnabled : false, 
-                    errorInfoEnabled : false, 
+                    errorInfoSeqEnabled : false, 
+                    errorInSequence : false, 
                     firingEnabled : false, 
                     sequenceTerminated : true
                 });
                 this.toastService.showToast('success', ['sequence terminated successfully']);
             } else {
                 this.settingsService.update({
-                    errorButtonEnabled : false, 
-                    errorInfoEnabled : false, 
+                    errorInfoSeqEnabled : false, 
+                    errorInSequence : false, 
                     firingEnabled : true, 
                     sequenceTerminated : false
                 });
             };
         } else {
-            this.updateErrorInfo(new ErrorInfo([new ErrorParagraph('net is not sound', errorArray)]));
+            this._errorInfoSubject.next(new ErrorInfo([new ErrorParagraph('net is not sound', errorArray)]));
             if (this.settingsService.state.switchDisplayModeOnError) {
                 this._previousMode = this.settingsService.state.displayMode;
                 this.settingsService.update({displayMode : 'errors'});
                 this._modeAutoChanged = true;
             };
             this.settingsService.update({
-                errorButtonEnabled : true, 
-                errorInfoEnabled : false, 
+                errorInfoSeqEnabled : false, 
+                errorInSequence : true, 
                 firingEnabled : false, 
                 sequenceTerminated : true
             });
@@ -948,10 +916,10 @@ export class SimulationService implements OnDestroy {
                         content : 'Whenever a sequence terminates, whether an error occurred or not, the tool checks if this exact sequence has been executed before.',
                     }, {
                         style : 'margin-top:5px;margin-left:10px;margin-right:5px;margin-bottom:0px;',
-                        content : 'Newly discovered sequences are appended to the log, displayed below the canvas.',
+                        content : 'Newly discovered sequences are appended to the log displayed below the canvas.',
                     }, {
                         style : 'margin-top:5px;margin-left:10px;margin-right:5px;margin-bottom:0px;',
-                        content : 'Previously completed sequences can be loaded by selecting them from the log',
+                        content : 'Previously completed sequences can be loaded by selecting them from the log.',
                     }], 'Tutorial - Sequence Log', 'max-width:450px;', 'Got it!');
                     const cookieUpdate : string = ('sound.ts=' + cookieCont + ',l' + '; expires=session; path=/');
                     document.cookie = cookieUpdate;
@@ -959,7 +927,6 @@ export class SimulationService implements OnDestroy {
                 this.settingsService.update({tutorialLog : true});
             };
         };
-        this.testInitialMarking();
         this._lastResult = result;
         return result;
     };
@@ -1027,6 +994,9 @@ export class SimulationService implements OnDestroy {
                         newlyVisitedElements.push(input[1]);
                         this.svgService.setElementSeqPastFlag(input[1], true);
                     };
+                    if (this.settingsService.state.showPlaceMarkings) {
+                        this.svgService.setSvgPlaceSymbolVisibility(input[0]);
+                    };
                 };
                 for (const output of inTransition.output) {
                     output[0].marking = (output[0].marking + output[1].weight);
@@ -1040,27 +1010,19 @@ export class SimulationService implements OnDestroy {
                         newlyVisitedElements.push(output[1]);
                         this.svgService.setElementSeqPastFlag(output[1], true);
                     };
-                };
-                const discoveryPreCheck : boolean = this._deadDiscovered;
-                this._deadExtension = {
-                    firedTransition : inTransition,
-                    addedToSequence : newlyVisitedElements,
-                    markingValidity : false
+                    if (this.settingsService.state.showPlaceMarkings) {
+                        this.svgService.setSvgPlaceSymbolVisibility(output[0]);
+                    };
                 };
                 let result : {
                     validMarking : boolean,
                     sequenceTerminated : boolean
                 } = this.testMarking();
-                this._deadExtension = undefined;
-                const discoveryPostCheck : boolean = this._deadDiscovered;
                 this.net.activeSequence.push({
                     firedTransition : inTransition,
                     addedToSequence : newlyVisitedElements,
                     markingValidity : result.validMarking
                 });
-                if ((!discoveryPreCheck) && (discoveryPostCheck)) {
-                    this._deadSequence = this.net.activeSequence;
-                };
                 this.net.nextSequenceEntry++;
                 this.net.unsavedSequence = true;
                 if (result.sequenceTerminated) {
@@ -1135,11 +1097,17 @@ export class SimulationService implements OnDestroy {
                 output[0].marking = (output[0].marking - output[1].weight);
                 this.svgService.setSvgPlaceSymbolContent(output[0]);
                 this.svgService.setSVGPlaceInfoTextM(output[0]);
+                if (this.settingsService.state.showPlaceMarkings) {
+                    this.svgService.setSvgPlaceSymbolVisibility(output[0]);
+                };
             };
             for (const input of lastEntry.firedTransition.input) {
                 input[0].marking = (input[0].marking + input[1].weight);
                 this.svgService.setSvgPlaceSymbolContent(input[0]);
                 this.svgService.setSVGPlaceInfoTextM(input[0]);
+                if (this.settingsService.state.showPlaceMarkings) {
+                    this.svgService.setSvgPlaceSymbolVisibility(input[0]);
+                };
             };
             for (const elem of lastEntry.addedToSequence) {
                 if (elem.inSequencePast) {
@@ -1154,7 +1122,7 @@ export class SimulationService implements OnDestroy {
             const result : {
                 validMarking : boolean,
                 sequenceTerminated : boolean
-            } = this.testMarking(true);
+            } = this.testMarking();
             if (!result.validMarking) {
                 this.popupService.error('srv.sim.use.002', 'inconsistent internal data state', 'it is recommended to restart the tool');
                 throw new Error('#srv.sim.use.002: ' + 'undoing sequence entry failed - the performed undo action lead to an invalid net marking');
@@ -1205,6 +1173,9 @@ export class SimulationService implements OnDestroy {
                             this.popupService.error('srv.sim.rse.002', 'inconsistent internal data state', 'it is recommended to restart the tool');
                             throw new Error('#srv.sim.rse.002: ' + 'redoing sequence entry failed - an input arc (index : ' + (input[1].id) + ') of the transition that is to be fired as part of the redo action is neither flagged as \'to be visited\', nor as \'already visited\'');
                         };
+                        if (this.settingsService.state.showPlaceMarkings) {
+                            this.svgService.setSvgPlaceSymbolVisibility(input[0]);
+                        };
                     };
                     for (const output of nextEntry.firedTransition.output) {
                         output[0].marking = (output[0].marking + output[1].weight);
@@ -1225,6 +1196,9 @@ export class SimulationService implements OnDestroy {
                         } else if (!(output[1].inSequencePast)) {
                             this.popupService.error('srv.sim.rse.004', 'inconsistent internal data state', 'it is recommended to restart the tool');
                             throw new Error('#srv.sim.rse.004: ' + 'redoing sequence entry failed - an output arc (index : ' + (output[1].id) + ') of the transition that is to be fired as part of the redo action is neither flagged as \'to be visited\', nor as \'already visited\'');
+                        };
+                        if (this.settingsService.state.showPlaceMarkings) {
+                            this.svgService.setSvgPlaceSymbolVisibility(output[0]);
                         };
                     };
                     const result : {
@@ -1303,7 +1277,9 @@ export class SimulationService implements OnDestroy {
                 }, {
                     style : 'margin-top:5px;margin-left:10px;margin-right:5px;margin-bottom:0px;',
                     content : 'This feature is not intended to be used as the primary tool for net analysis, but rather to be used complimentary to manual transition firing. It will effectively find whether a given net is sound through a brute-force approach.'
-                }, {
+                },
+                undefined, 
+                {
                     style : 'margin-top:5px;margin-left:10px;margin-right:5px;margin-bottom:0px;',
                     content : 'Are you sure you want to use this feature?',
                 }], {
@@ -1438,9 +1414,51 @@ export class SimulationService implements OnDestroy {
                     this.popupService.error('srv.sim.sfs.000', 'component malfunction', 'it is recommended to restart the tool');
                     throw new Error('#srv.sim.sfs.000: ' + 'saving sequence failed - the log component is undefined');
                 };
+                const errState : {
+                    nSeq : number,
+                    iSeq : number,
+                    dTrs : number
+                } = this.net.errors;
+                switch (this._foundError) {
+                    case 'noTermination' : {
+                        console.log('nTerm error')
+                        this.net.errors = {
+                            nSeq : (this.net.errors.nSeq + 1), 
+                            iSeq : (this.net.errors.iSeq), 
+                            dTrs : (this.net.errors.dTrs)
+                        };
+                        this._errorsSubject.next(this.net.errors);
+                        this.settingsService.update({errorInNet : true});
+                        break;
+                    }
+                    case 'invalidTermination' : {
+                        console.log('iTerm error')
+                        console.log(this.net.errors)
+                        this.net.errors = {
+                            nSeq : (this.net.errors.nSeq), 
+                            iSeq : (this.net.errors.iSeq + 1), 
+                            dTrs : (this.net.errors.dTrs)
+                        };
+                        console.log(this.net.errors)
+                        this._errorsSubject.next(this.net.errors);
+                        this.settingsService.update({errorInNet : true});
+                        break;
+                    }
+                    case 'deadTransitions' : {
+                        console.log('dTran error')
+                        this.net.errors = {
+                            nSeq : (this.net.errors.nSeq), 
+                            iSeq : (this.net.errors.iSeq), 
+                            dTrs : (this._deadTransitions.length)
+                        };
+                        this._errorsSubject.next(this.net.errors);
+                        this.settingsService.update({errorInNet : true});
+                        break;
+                    }
+                };
             } else if (foundIndices.length > 1){
-                this.popupService.error('srv.sim.sfs.001', 'inconsistent internal data state', 'it is recommended to restart the tool');
-                throw new Error('#srv.sim.sfs.001: ' + 'saving sequence failed - the firing sequence to be saved was found at ' + foundIndices.length + ' locations within the log');
+                this.popupService.error('srv.sim.sfs.002', 'inconsistent internal data state', 'it is recommended to restart the tool');
+                throw new Error('#srv.sim.sfs.002: ' + 'saving sequence failed - the firing sequence to be saved was found at ' + foundIndices.length + ' locations within the log');
             };
             this.net.unsavedSequence = false;
         };
@@ -1480,8 +1498,9 @@ export class SimulationService implements OnDestroy {
             this.svgService.resetAllErrLvl2Flags();
             for (const place of this.net.places) {
                 place.marking = place.initialMarking;
-                this.svgService.setSvgPlaceSymbolContent(place);
                 this.svgService.setSVGPlaceInfoTextM(place);
+                this.svgService.setSvgPlaceSymbolContent(place);
+                this.svgService.setSvgPlaceSymbolVisibility(place);
             };
             if (this.settingsService.state.switchDisplayModeOnLoadFromLog) {
                 this.settingsService.update({displayMode : 'traveled'});
@@ -1549,8 +1568,9 @@ export class SimulationService implements OnDestroy {
         this.svgService.resetAllErrLvl2Flags();
         for (const place of this.net.places) {
             place.marking = place.initialMarking;
-            this.svgService.setSvgPlaceSymbolContent(place);
             this.svgService.setSVGPlaceInfoTextM(place);
+            this.svgService.setSvgPlaceSymbolContent(place);
+            this.svgService.setSvgPlaceSymbolVisibility(place);
         };
         this.net.activeSequence = [];
         this.net.nextSequenceEntry = 0;

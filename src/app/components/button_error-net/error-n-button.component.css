@@ -1,0 +1,33 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    width: 100px;
+}
+
+.container {
+    position: relative;
+}
+
+.container-overlay-icon {
+    pointer-events: none;
+    position: absolute;
+    z-index: 1;
+    top: 14px;
+    right: 14px;
+}
+
+.mat-icon{
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+    color: yellow;
+}
+
+.overlay-icon{
+    font-size: 72px;
+    width: 72px;
+    height: 72px;
+    color: black;
+}

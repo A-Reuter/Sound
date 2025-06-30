@@ -62,6 +62,9 @@ export class MenuBarComponent implements OnDestroy {
 
     private _exampleFilesEnabled : boolean;
 
+    private _hideLowMarkings : boolean;
+    private _hideLowWeights : boolean;
+
     private _showArcWeights : boolean;
     private _showNodeInfos : boolean;
     private _showPlaceIds : boolean;
@@ -111,6 +114,8 @@ export class MenuBarComponent implements OnDestroy {
         this._notifyError = this.settingsService.state.notifyError;
         this._notifyConfirm = this.settingsService.state.notifyConfirm;
         this._notifyInfo = this.settingsService.state.notifyInfo;
+        this._hideLowMarkings = this.settingsService.state.hideLowMarkings;
+        this._hideLowWeights = this.settingsService.state.hideLowWeights;
         this._showArcWeights = this.settingsService.state.showArcWeights;
         this._showNodeInfos = this.settingsService.state.showNodeInfos;
         this._showPlaceIds = this.settingsService.state.showPlaceIds;
@@ -152,6 +157,12 @@ export class MenuBarComponent implements OnDestroy {
                 };
                 if (this._notifyInfo !== state.notifyInfo) {
                     this._notifyInfo = state.notifyInfo;
+                };
+                if (this._hideLowMarkings !== state.hideLowMarkings) {
+                    this._hideLowMarkings = state.hideLowMarkings;
+                };
+                if (this._hideLowWeights !== state.hideLowWeights) {
+                    this._hideLowWeights = state.hideLowWeights;
                 };
                 if (this._showArcWeights !== state.showArcWeights) {
                     this._showArcWeights = state.showArcWeights;
@@ -304,6 +315,14 @@ export class MenuBarComponent implements OnDestroy {
 
     public get notifyInfoNone() : boolean {
         return (this._notifyInfo === 'none');
+    };
+
+    public get hideLowMarkings() : boolean {
+        return (this._hideLowMarkings);
+    };
+
+    public get hideLowWeights() : boolean {
+        return (this._hideLowWeights);
     };
 
     public get showArcWeights() : boolean {
@@ -696,11 +715,23 @@ export class MenuBarComponent implements OnDestroy {
         };
     };
 
-    public processElementSelection(inSelection : ('AW' | 'NI' | 'PI' | 'PL' | 'PM' | 'TI' | 'TL' | 'TT'), inValue : boolean) : void {
+    public processElementSelection(inSelection : ('AW' | 'HM' | 'HW' | 'NI' | 'PI' | 'PL' | 'PM' | 'TI' | 'TL' | 'TT'), inValue : boolean) : void {
         switch (inSelection) {
             case 'AW' : {
                 if (this.settingsService.state.showArcWeights !== inValue) {
                     this.settingsService.update({showArcWeights : inValue});
+                };
+                break;
+            }
+            case 'HM' : {
+                if (this.settingsService.state.hideLowMarkings === inValue) {
+                    this.settingsService.update({hideLowMarkings : !inValue});
+                };
+                break;
+            }
+            case 'HW' : {
+                if (this.settingsService.state.hideLowWeights === inValue) {
+                    this.settingsService.update({hideLowWeights : !inValue});
                 };
                 break;
             }

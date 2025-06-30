@@ -310,7 +310,12 @@ export class FileWriterService {
             sequence_unsaved : inNet.unsavedSequence, 
             sequence_next : inNet.nextSequenceEntry, 
             sequence_active : [], 
-            sequence_log : []
+            sequence_log : [], 
+            errors : {
+                nSeq : 0, 
+                iSeq : 0, 
+                dTrs : 0
+            }
         };
         const savNodeIds : {
             [netNodeId : number] : string
@@ -480,6 +485,7 @@ export class FileWriterService {
                 throw new Error('#srv.fws.nts.004: ' + 'conversion of net to sav failed - firing sequence of length \'' + logSequence.length + '\' detected in the simulation log');
             };
         };
+        jsonSoundSave.errors = inNet.errors;
         return jsonSoundSave;
     };
 
