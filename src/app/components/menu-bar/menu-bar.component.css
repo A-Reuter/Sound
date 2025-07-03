@@ -36,18 +36,36 @@
     --mat-checkbox-disabled-label-color: #1a1b1f;
 }
 
+.mat-accent.mat-mdc-checkbox.warning {
+    --mdc-checkbox-selected-icon-color: #000000;
+    --mdc-checkbox-selected-hover-icon-color: #ff0000;
+    --mdc-checkbox-selected-focus-icon-color: #ff0000;
+    --mdc-checkbox-selected-focus-state-layer-color: #ff0000;
+    --mdc-checkbox-selected-pressed-state-layer-color: #ff0000;
+    --mdc-checkbox-unselected-hover-state-layer-color: #ff0000;
+    --mdc-checkbox-unselected-hover-icon-color: #ff0000;
+}
+
 .slider {
     width: 160px;
 }
 
 .slider-container {
+    width: 200px;
     margin-top: 10px;
     margin-left: 20px;
-    width: 200px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: flex-start;
+}
+
+.slider-container-warning {
+    width: 240px;
+    margin-top: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    text-align: center;
 }
 
 .tether {

@@ -58,9 +58,9 @@ export class MenuBarComponent implements OnDestroy {
 
     private _autorunActive : boolean;
 
-    private _displayMode : ('default' | 'traveled' | 'errors');
+    private _displayedFileset : ('examples' | 'exercises');
 
-    private _exampleFilesEnabled : boolean;
+    private _displayMode : ('default' | 'traveled' | 'errors');
 
     private _hideLowMarkings : boolean;
     private _hideLowWeights : boolean;
@@ -93,6 +93,7 @@ export class MenuBarComponent implements OnDestroy {
     private _outIdSuffix : number = 0;
 
     private _sliderValue : number;
+    private _sliderWarning : boolean;
 
     /* methods - constructor */
 
@@ -106,11 +107,11 @@ export class MenuBarComponent implements OnDestroy {
     ) {
         this.fileData = new EventEmitter<{fileType : string, fileContent : string}>();
         this._autorunActive = this.settingsService.state.autorunExec;
+        this._displayedFileset = this.settingsService.state.displayedFileset;
         this._displayMode = this.settingsService.state.displayMode;
         this._embedderEnabled = this.settingsService.state.springEmbedderEnabled;
         this._embedderExemptions = this.settingsService.state.springEmbedderExemptions;
         this._embedderTethering = this.settingsService.state.springEmbedderTethering;
-        this._exampleFilesEnabled = this.settingsService.state.exampleFilesEnabled;
         this._notifyError = this.settingsService.state.notifyError;
         this._notifyConfirm = this.settingsService.state.notifyConfirm;
         this._notifyInfo = this.settingsService.state.notifyInfo;
@@ -134,6 +135,9 @@ export class MenuBarComponent implements OnDestroy {
                 if (this._autorunActive !== state.autorunExec) {
                     this._autorunActive = state.autorunExec;
                 };
+                if (this._displayedFileset !== state.displayedFileset) {
+                    this._displayedFileset = state.displayedFileset;
+                };
                 if (this._displayMode !== state.displayMode) {
                     this._displayMode = state.displayMode;
                 };
@@ -145,9 +149,6 @@ export class MenuBarComponent implements OnDestroy {
                 };
                 if (this._embedderTethering !== state.springEmbedderTethering) {
                     this._embedderTethering = state.springEmbedderTethering;
-                };
-                if (this._exampleFilesEnabled !== state.exampleFilesEnabled) {
-                    this._exampleFilesEnabled = state.exampleFilesEnabled;
                 };
                 if (this._notifyError !== state.notifyError) {
                     this._notifyError = state.notifyError;
@@ -224,6 +225,7 @@ export class MenuBarComponent implements OnDestroy {
             }
         );
         this._sliderValue = this.settingsService.state.autorunTime;
+        this._sliderWarning = true;
     };
 
     /* methods - on destroy */
@@ -237,7 +239,7 @@ export class MenuBarComponent implements OnDestroy {
 
     /* methods - getters */
 
-    public get autoRunActive() : boolean {
+    public get autorunActive() : boolean {
         return (this._autorunActive);
     };
 
@@ -273,8 +275,8 @@ export class MenuBarComponent implements OnDestroy {
         return (this._embedderTethering === 'tight');
     };
 
-    public get exampleFilesEnabled() : boolean {
-        return (this._exampleFilesEnabled);
+    public get examples() : boolean {
+        return (this._displayedFileset === 'examples');
     };
 
     public get notifyErrorDialog() : boolean {
@@ -377,8 +379,20 @@ export class MenuBarComponent implements OnDestroy {
         return (this._switchOnRun);
     };
 
+    public get sliderClass() : string {
+        if (this._sliderWarning) {
+            return 'slider-container-warning';
+        } else {
+            return 'slider-container';
+        };
+    };
+
     public get sliderValue() : number {
         return (this._sliderValue);
+    };
+
+    public get sliderWarning() : boolean {
+        return (this._sliderWarning);
     };
 
     public get loadDisabled() : boolean {
@@ -394,7 +408,7 @@ export class MenuBarComponent implements OnDestroy {
     };
 
     public get saveMenuDisabled() : boolean {
-        return this._autorunActive;
+        return (this._autorunActive);
     };
 
     public get saveMenuTooltip() : string {
@@ -625,6 +639,10 @@ export class MenuBarComponent implements OnDestroy {
     public set sliderValue(inValue : number) {
         this._sliderValue = inValue;
         this.settingsService.update({autorunTime : inValue});
+    };
+
+    public set sliderWarning(inValue : boolean) {
+        this._sliderWarning = inValue;
     };
 
     /* methods - other */
@@ -887,8 +905,12 @@ export class MenuBarComponent implements OnDestroy {
         this.simulationService.retest();
     };
 
-    public processExampleAction() : void {
-        this.settingsService.update({exampleFilesEnabled : (!(this._exampleFilesEnabled))});
+    public processFilesetAction() : void {
+        if (this._displayedFileset !== 'examples') {
+            this.settingsService.update({displayedFileset : 'examples'});
+        } else {
+            this.settingsService.update({displayedFileset : 'exercises'});
+        };
     };
 
     public processNotificationSelection(inSelection : ('ED' | 'EP' | 'ET' | 'CD' | 'CP' | 'CN' | 'ID' | 'IP' | 'IT' | 'IN')) : void {

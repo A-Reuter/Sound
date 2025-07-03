@@ -19,15 +19,20 @@ export class Transition extends Node {
         xCoordinate : number, 
         yCoordinate : number
     ) {
-        let shortLabel : string = label.replace(/\s/g, "");
-        if (shortLabel.length > 2) {
-            shortLabel = (shortLabel[0] + shortLabel[1] + shortLabel[2]);
-        } else if (shortLabel.length > 1) {
-            shortLabel = (shortLabel[0] + shortLabel[1]);
-        } else if (shortLabel.length > 0) {
-            shortLabel = (shortLabel[0]);
+        let characters : string = label.replace(/(\s|\r|\n)/g, "");
+        let first : string = characters.slice(0, 1);
+        let consonants : (string[] | null) = characters.slice(1).match(/[^AEIOU]/gi);
+        let short : string;
+        if (characters.length > 3) {
+            if ((first) && (consonants) && (consonants.length > 1)) {
+                short = (first + consonants[0] + consonants[1]);
+            } else {
+                short = (characters.slice(0, 3));
+            };
+        } else {
+            short = (characters);
         };
-        super(id, 'transition', label, shortLabel, xCoordinate, yCoordinate);
+        super(id, 'transition', label, short, xCoordinate, yCoordinate);
         this._enabled = false;
         this._input = [];
         this._output = [];

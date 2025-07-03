@@ -29,8 +29,8 @@ export class GraphicsConfigService {
 
     /* offset for symbols displayed directly on top of node objects */
     private readonly _defaultNodeSymbolOffset : number = (0.3 * this._defaultNodeRadius);
-    private readonly _reducedNodeSymbolOffset : number = (0.525 * this._defaultNodeRadius);
-    private readonly _minimalNodeSymbolOffset : number = (0.75 * this._defaultNodeRadius);
+    private readonly _reducedNodeSymbolOffset : number = (0.575 * this._defaultNodeRadius);
+    private readonly _minimalNodeSymbolOffset : number = (0.725 * this._defaultNodeRadius);
 
     /* delay for animations */
     private readonly _defaultInfoHoverDelay : number = 750;
@@ -49,6 +49,8 @@ export class GraphicsConfigService {
     private readonly _sinkFill       = 'rgb(255, 175, 100)';
     private readonly _enabledStroke  = 'rgb(0, 255, 0)';
     private readonly _enabledFill    = 'rgb(125, 255, 125)';
+    private readonly _seqErrStroke   = 'rgb(255, 150, 150)';
+    private readonly _seqErrFill     = 'rgb(255, 180, 180)';
     private readonly _seqLogStroke   = 'rgb(200, 200, 200)';
     private readonly _seqLogFill     = 'rgb(225, 225, 225)';
     private readonly _seqPastStroke  = 'rgb(0, 150, 0)';
@@ -188,6 +190,14 @@ export class GraphicsConfigService {
 
     public get enabledFill(): string {
         return this._enabledFill;
+    };
+
+    public get seqErrStroke(): string {
+        return this._seqErrStroke;
+    };
+
+    public get seqErrFill(): string {
+        return this._seqErrFill;
     };
 
     public get seqLogStroke(): string {

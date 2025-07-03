@@ -4,9 +4,14 @@
             [matTooltip]="tooltip" 
             (click)="processMouseClick()">
         @if (embedderEnabled) {
-            <mat-icon>auto_fix_high</mat-icon>
+            <mat-icon>
+                auto_fix_high
+            </mat-icon>
         } @else {
-            <mat-icon>open_with<!-- auto_fix_off --></mat-icon>
+            <mat-icon>
+                open_with
+                <!-- auto_fix_off -->
+            </mat-icon>
         }
     </button>
 </div>

@@ -19,7 +19,7 @@
             </div>
             <h4>Color Legend</h4>
             <div class="margin">
-                <p>the canvas color legend can be accessed using the small info button located to the right of the display mode selector</p>
+                <p>the canvas color legend can be accessed using the small <b>Info</b> button located to the right of the display mode selector</p>
             </div>
             <h4>Error Information</h4>
             <div class="margin">
@@ -41,20 +41,31 @@
             </div>
             <h4>Drag & Drop</h4>
             <div class="margin">
-                <p>files can be loaded by dragging them onto the canvas, e.g. from the example files section or from another window</p>
+                <p>files can be loaded by dragging them onto the canvas, e.g. from the files section or from another window</p>
             </div>
             <h4>File Selection</h4>
             <div class="margin">
                 <p>to select a file via a standard selection window, use the <b>Load File</b> option within the <b>File</b> menu</p>
             </div>
-            <h4>Example Files</h4>
+            <h4>File Sets</h4>
             <div class="margin">
-                <p>leftmost within the control bar above the canvas, three example files are available to load through drag & drop</p>
-                <p style="margin-bottom:7px;">every example showcases one of the three conditions of the soundness property not being met:</p>
+                <p>to the left within the control bar above the canvas, two different sets of three files are available to individually load through drag & drop</p>
                 <ul>
-                    <li class="circle">example A contains a workflow net that is not sound because the modelled process does not always terminate</li>
-                    <li class="circle">example B contains a workflow net that is not sound because the modelled process does not always terminate correctly</li>
-                    <li class="circle">example C contains a workflow net that is not sound because the modelled process contains an activity that can never be executed</li>
+                    <li>
+                        <span class="highlight">examples</span>
+                        <br/>
+                        <p style="margin-left:10px;">all example files are pre-analyzed for demonstration, with each example showcasing one of the three conditions of the soundness property not being met:</p>
+                        <ul>
+                            <li class="circle"><b>Example A</b> contains a workflow net that is not sound because the modelled process does not always terminate</li>
+                            <li class="circle"><b>Example B</b> contains a workflow net that is not sound because the modelled process does not always terminate correctly</li>
+                            <li class="circle"><b>Example C</b> contains a workflow net that is not sound because the modelled process contains an activity that can never be executed</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="highlight">exercises</span>
+                        <br/>
+                        <p style="margin-left:10px;">the exercise files are unmodified to allow for user-driven analysis</p>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -96,7 +107,7 @@
             </ul>
             <h4>undoing a firing action</h4>
             <ul>
-                <li>to roll back a previously executed firing action, press the <b>Back</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
+                <li>to roll back a previously executed firing action, press the <b>Backward</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
             </ul>
             <h4>redoing a firing action</h4>
             <ul>
@@ -115,13 +126,14 @@
             <ul>
                 <li>sequences loaded from the log always start with the net in the initial state</li>
                 <li>to skip forward within a sequence loaded from the log, press the <b>Forward</b> button located centrally above the canvas, or use the <b>Redo Step</b> option within the <b>Edit</b> menu</li>
-                <li>to skip backward within a sequence loaded from the log, press the <b>Back</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
+                <li>to skip backward within a sequence loaded from the log, press the <b>Backward</b> button located centrally above the canvas, or use the <b>Undo Step</b> option within the <b>Edit</b> menu</li>
             </ul>
             <h4>automating sequence execution</h4>
             <ul>
-                <li>to start the automated execution of random firing sequences, press the <b>Play</b> button located centrally above the canvas, or use the <b>Start Automation</b> option within the <b>Edit</b> menu</li>
+                <li>to start the automated execution of random firing sequences, press the <b>Fast Forward</b> button located centrally above the canvas, or use the <b>Start Automation</b> option within the <b>Edit</b> menu</li>
                 <li>the algorithm will generate sequences by repeatedly choosing a random transition from all enabled transitions and firing it</li>
                 <li>when a sequence terminates, the algorithm will reset the net and begin a new sequence, looping until it is manually stopped</li>
+                <li>to stop the execution algorithm, press the <b>Pause</b> button located centrally above the canvas, or use the <b>Stop Automation</b> option within the <b>Edit</b> menu</li>
             </ul>
         </div>
     </div>

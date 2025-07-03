@@ -20,36 +20,54 @@
 
     <!-- display controls -->
     <div class="flex_row_align_space-between_start">
+        <delete-button></delete-button>
+        <div class="gap_h_20px"></div>
         <files-button></files-button>
         <div class="gap_h_20px"></div>
-        <div class="container_files">
-            @if (exampleFilesEnabled) {
-                <app-example-file title="an example workflow net that is not sound (does not always terminate)"
+        @if (examples) {
+            <div class="container_examples">
+                <example-file title="an example workflow net that is not sound (does not always terminate)"
                                   label="Example A" 
-                                  link="/assets/example-files/not-sound_1_no-termination.sav">
-                </app-example-file>
+                                  link="/assets/prepared_files/example_1_not-sound_no-termination.sav">
+                </example-file>
                 <div class="gap_h_20px"></div>
-                <app-example-file title="an example workflow net that is not sound (does not always terminate correctly)"
+                <example-file title="an example workflow net that is not sound (does not always terminate correctly)"
                                   label="Example B" 
-                                  link="/assets/example-files/not-sound_2_invalid-termination.sav">
-                </app-example-file>
+                                  link="/assets/prepared_files/example_2_not-sound_invalid-termination.sav">
+                </example-file>
                 <div class="gap_h_20px"></div>
-                <app-example-file title="an example workflow net that is not sound (contains a dead transition)"
+                <example-file title="an example workflow net that is not sound (contains a dead transition)"
                                   label="Example C" 
-                                  link="/assets/example-files/not-sound_3_dead-transition.sav">
-                </app-example-file>
-            }
-        </div>
+                                  link="/assets/prepared_files/example_3_not-sound_dead-transition.sav">
+                </example-file>
+                <div style="min-width:130px"></div>
+            </div>
+        } @else {
+            <div class="container_exercises">
+                <example-file title=""
+                                  label="Exercise 3.2" 
+                                  link="/assets/prepared_files/exercise_3.2.json">
+                </example-file>
+                <div class="gap_h_20px"></div>
+                <example-file title=""
+                                  label="Exercise 3.3" 
+                                  link="/assets/prepared_files/exercise_3.3.json">
+                </example-file>
+                <div class="gap_h_20px"></div>
+                <example-file title=""
+                                  label="Exercise 3.3 (expanded)" 
+                                  link="/assets/prepared_files/exercise_3.3-expanded.json">
+                </example-file>
+            </div>
+        }
         <div class="gap_control_row_left"></div>
-        <delete-button></delete-button>
+        <reset-button></reset-button>
         <div class="gap_h_50px"></div>
         <undo-button></undo-button>
         <div class="gap_h_10px"></div>
-        <autorun-button></autorun-button>
-        <div class="gap_h_10px"></div>
         <redo-button></redo-button>
         <div class="gap_h_50px"></div>
-        <reset-button></reset-button>
+        <autorun-button></autorun-button>
         <div class="gap_control_row_right"></div>
         <focus-button></focus-button>
         <div class="gap_control_row_right"></div>

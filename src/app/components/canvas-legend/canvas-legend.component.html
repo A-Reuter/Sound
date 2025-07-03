@@ -15,14 +15,14 @@
         </div>
         <h4 class="subtitle">All Modes</h4>
         <li class="list">
-            <span class="text-regular" [style]="activeStyleS">&nbsp;&nbsp;&nbsp;</span>
-            <span class="text-regular" [style]="activeStyleF">&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-regular" [style]="activeStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-regular" [style]="activeStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
             <span class="text-roboto">hovered element</span>
         </li>
         <li class="list">
-            <span class="text-regular" [style]="markedStyleS">&nbsp;&nbsp;&nbsp;</span>
-            <span class="text-regular" [style]="markedStyleF">&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-regular" [style]="markedStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-regular" [style]="markedStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
             <span class="text-roboto">marked element</span>
         </li>
@@ -30,72 +30,82 @@
         @if (displaymode === 'default') {
             <h4 class="subtitle">Default Mode</h4>
             <li class="list">
-                <span class="text-regular" [style]="defaultStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="defaultStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="defaultStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="defaultStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">basic element</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="sourceStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="sourceStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="sourceStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="sourceStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">source place</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="sinkStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="sinkStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="sinkStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="sinkStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">sink place</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="enabledStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="enabledStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="enabledStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="enabledStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">enabled transition</span>
             </li>
         } @else if (displaymode === 'traveled') {
             <h4 class="subtitle">Traveled Mode</h4>
             <li class="list">
-                <span class="text-regular" [style]="seqLogStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="seqLogStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="seqLogStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="seqLogStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element in a log sequence</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="untrvStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="untrvStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="untrvStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="untrvStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element not in any sequence</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="seqPastStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="seqPastStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="seqPastStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="seqPastStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element in the active sequence (past)</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="seqNextStyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="seqNextStyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="seqNextStyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="seqNextStyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element in the active sequence (future)</span>
             </li>
+            @if (autorunExec) {
+                <li class="list">
+                    <span class="text-regular" [style]="errLvl2StyleS">&nbsp;&nbsp;</span>
+                    <span class="text-regular" [style]="errLvl2StyleF">&nbsp;&nbsp;</span>
+                    <span class="text-regular" [style]="seqErrStyleS">&nbsp;&nbsp;</span>
+                    <span class="text-regular" [style]="seqErrStyleF">&nbsp;&nbsp;</span>
+                    <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
+                    <span class="text-roboto">element in the active sequence (on error)</span>
+                </li>
+            }
         } @else if (displaymode === 'errors') {
             <h4 class="subtitle">Errors Mode</h4>
             <li class="list">
-                <span class="text-regular" [style]="errLvl0StyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="errLvl0StyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="errLvl0StyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="errLvl0StyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element not tied to an error</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="errLvl1StyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="errLvl1StyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="errLvl1StyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="errLvl1StyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element indirectly tied to an error</span>
             </li>
             <li class="list">
-                <span class="text-regular" [style]="errLvl2StyleS">&nbsp;&nbsp;&nbsp;</span>
-                <span class="text-regular" [style]="errLvl2StyleF">&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="errLvl2StyleS">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="text-regular" [style]="errLvl2StyleF">&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <span class="text-regular">&nbsp;--&gt;&nbsp;</span>
                 <span class="text-roboto">element directly tied to an error</span>
             </li>

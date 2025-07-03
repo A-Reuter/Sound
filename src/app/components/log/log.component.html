@@ -1,4 +1,23 @@
-<p class="header">Firing Sequence Log</p>
+<p class="header">
+     Firing Sequence Log
+     @if (sequence) {
+          <span class="log-info">
+               @if (completed !== 1) {
+                    ({{completed}} sequences completed
+               } @else {
+                    ({{completed}} sequence completed
+               } -- @if (unique !== 1) {
+                    {{unique}} unique sequences found
+               } @else {
+                    {{unique}} unique sequence found
+               } -- @if (invalid !== 1) {
+                    {{invalid}} invalid sequence terminations)
+               } @else {
+                    {{invalid}} invalid sequence termination)
+               }
+          </span>
+     }
+</p>
 <div #logArea 
      class="log" 
      (mouseenter)="processMouseEnter($event)" 

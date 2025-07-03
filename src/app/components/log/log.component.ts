@@ -76,6 +76,24 @@ export class LogComponent implements OnDestroy {
         this._netSubscription.unsubscribe();
     };
 
+    /* methods - getters */
+
+    public get sequence() : boolean {
+        return (this.net.completedSequences > 0);
+    };
+
+    public get completed() : number {
+        return (this.net.completedSequences);
+    };
+
+    public get unique() : number {
+        return (this.net.simulationLog.length);
+    };
+
+    public get invalid() : number {
+        return (this.net.errors.nSeq + this.net.errors.iSeq);
+    };
+
     /* methods - other */
 
     private getMouseTarget(inMouseEvent : MouseEvent) : (number | undefined) {

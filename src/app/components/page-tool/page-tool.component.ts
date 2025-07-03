@@ -19,7 +19,7 @@ import {ErrorNetInfoComponent} from '../error-info-net/error-info-net.component'
 import {ErrorSeqButtonComponent} from '../button_error-sequence/error-s-button.component';
 import {ErrorSeqInfoComponent} from '../error-info-seq/error-info-seq.component';
 import {ExampleFileComponent} from '../example-file/example-file.component';
-import {FilesButtonComponent} from '../button_toggle-example-files/files-button.component';
+import {FilesButtonComponent} from '../button_switch-fileset/files-button.component';
 import {FocusButtonComponent} from '../button_focus-view/focus-button.component';
 import {LegendButtonComponent} from '../button_canvas-legend/legend-button.component';
 import {LogComponent} from '../log/log.component';
@@ -85,11 +85,11 @@ export class ToolComponent implements OnDestroy {
 
     private _autorunActive : boolean;
     private _canvasLegendEnabled : boolean;
+    private _displayedFileset : ('examples' | 'exercises');
     private _errorInNet : boolean;
     private _errorInSequence : boolean;
     private _errorInfoNetEnabled : boolean;
     private _errorInfoSeqEnabled : boolean;
-    private _exampleFilesEnabled : boolean;
 
     /* methods - constructor */
 
@@ -105,11 +105,11 @@ export class ToolComponent implements OnDestroy {
         this.displayService.setToolComponent(this);
         this._autorunActive = this.settingsService.state.autorunExec;
         this._canvasLegendEnabled = this.settingsService.state.canvasLegendEnabled;
+        this._displayedFileset = this.settingsService.state.displayedFileset;
         this._errorInNet = this.settingsService.state.errorInNet;
         this._errorInSequence = this.settingsService.state.errorInSequence;
         this._errorInfoNetEnabled = this.settingsService.state.errorInfoNetEnabled;
         this._errorInfoSeqEnabled = this.settingsService.state.errorInfoSeqEnabled;
-        this._exampleFilesEnabled = this.settingsService.state.exampleFilesEnabled;
         this._settingsSubscription = this.settingsService.state$.subscribe(
             state => {
                 if (this._autorunActive !== state.autorunExec) {
@@ -117,6 +117,9 @@ export class ToolComponent implements OnDestroy {
                 };
                 if (this._canvasLegendEnabled !== state.canvasLegendEnabled) {
                     this._canvasLegendEnabled = state.canvasLegendEnabled;
+                };
+                if (this._displayedFileset !== state.displayedFileset) {
+                    this._displayedFileset = state.displayedFileset;
                 };
                 if (this._errorInfoNetEnabled !== state.errorInfoNetEnabled) {
                     this._errorInfoNetEnabled = state.errorInfoNetEnabled;
@@ -129,9 +132,6 @@ export class ToolComponent implements OnDestroy {
                 };
                 if (this._errorInSequence !== state.errorInSequence) {
                     this._errorInSequence = state.errorInSequence;
-                };
-                if (this._exampleFilesEnabled !== state.exampleFilesEnabled) {
-                    this._exampleFilesEnabled = state.exampleFilesEnabled;
                 };
             }
         );
@@ -159,31 +159,31 @@ export class ToolComponent implements OnDestroy {
         return this._toastMessages;
     };
 
-    public get canvasLegendEnabled() {
+    public get canvasLegendEnabled() : boolean {
         return this._canvasLegendEnabled;
     };
 
-    public get errorInfoNetEnabled() {
+    public get errorInfoNetEnabled() : boolean {
         return this._errorInfoNetEnabled;
     };
 
-    public get errorInfoSeqEnabled() {
+    public get errorInfoSeqEnabled() : boolean {
         return this._errorInfoSeqEnabled;
     };
 
-    public get errorNetButton() {
+    public get errorNetButton() : boolean {
         return (this._errorInNet && (!(this._errorInfoNetEnabled)));
     };
 
-    public get errorSeqButton() {
+    public get errorSeqButton() : boolean {
         return (this._errorInSequence && (!(this._errorInfoSeqEnabled)));
     };
 
-    public get exampleFilesEnabled() {
-        return this._exampleFilesEnabled;
+    public get examples() : boolean {
+        return (this._displayedFileset === 'examples');
     };
 
-    public get noAutorun() {
+    public get noAutorun() : boolean {
         return (!(this._autorunActive));
     };
 

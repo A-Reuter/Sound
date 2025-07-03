@@ -24,6 +24,12 @@ export interface Settings {
      */
     dataLoaded : boolean;
     /** 
+     * specifies the displayed set of files
+     * @value 'examples'  : displays a set of pre-solved files containing non-sound example nets
+     * @value 'exercises' : displays a set of exercise nets 
+     */
+    displayedFileset : ('examples' | 'exercises');
+    /** 
      * specifies the way a petri net is displayed on the canvas
      * @value 'default'  : highlights source and sink places aswell as enabled transitions
      * @value 'traveled' : highlights parts of the net present within the sequence log or the active firing sequence
@@ -46,10 +52,6 @@ export interface Settings {
      * specifies whether an error has occurred within the active sequence
      */
     errorInSequence : boolean;
-    /** 
-     * specifies whether the prepared example files are visible
-     */
-    exampleFilesEnabled : boolean;
     /** 
      * specifies whether additional checks to verify the integrity of the internal net model are performed at certain points
      * @value 'safe' : additional checks are performed, increasing execution time
@@ -90,6 +92,10 @@ export interface Settings {
      * @value 'none'   : shows no info
      */
     notifyInfo : ('dialog' | 'popup' | 'toast' | 'none');
+    /** 
+     * specifies whether the regular traveled mode colors for highlighting the active sequence should be overwritten with special colors for highlighting an error state
+     */
+    overwriteTraveledColors : boolean;
     /** 
      * specifies whether the current firing sequence has terminated
      */
@@ -193,12 +199,12 @@ export class SettingsService {
         autorunTime                     : 1000,
         canvasLegendEnabled             : false,
         dataLoaded                      : false,
+        displayedFileset                : 'examples',
         displayMode                     : 'default',
         errorInfoNetEnabled             : false,
         errorInfoSeqEnabled             : false,
         errorInNet                      : false,
         errorInSequence                 : false,
-        exampleFilesEnabled             : true,
         executionMode                   : 'safe',
         firingEnabled                   : false,
         hideLowMarkings                 : true,
@@ -206,6 +212,7 @@ export class SettingsService {
         notifyConfirm                   : 'dialog',
         notifyError                     : 'dialog',
         notifyInfo                      : 'dialog',
+        overwriteTraveledColors         : false,
         sequenceTerminated              : false,
         showArcWeights                  : true,
         showNodeInfos                   : false,

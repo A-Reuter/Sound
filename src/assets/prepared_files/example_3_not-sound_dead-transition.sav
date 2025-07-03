@@ -184,6 +184,7 @@
             }
         ]
     ],
+    "sequences_completed": 1,
     "errors": {
         "nSeq": 0,
         "iSeq": 0,

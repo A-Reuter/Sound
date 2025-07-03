@@ -10,8 +10,6 @@ import {Place} from '../../classes/net-representation/place';
 import {Transition} from '../../classes/net-representation/transition';
 
 import {PopupService} from '../notifications/popup.service';
-import {SettingsService} from '../config/settings.service';
-import {ToastService} from '../notifications/toast.service';
 
 @Injectable({
     providedIn: 'root'
@@ -25,9 +23,7 @@ export class FileParserService {
     /* methods : constructor */
 
     public constructor(
-        private readonly popupService : PopupService,
-        private readonly settingsService: SettingsService,
-        private readonly toastService : ToastService,
+        private readonly popupService : PopupService
     ) {}
 
     /* methods : other */
@@ -738,10 +734,15 @@ export class FileParserService {
                     throw new Error('could not parse log sequence \'' + logIdx + '\': sequence has length \'' + logEntry.length + '\'');
                 };
             };
+            if (jsonSoundSave.sequences_completed) {
+                savNet.completedSequences = jsonSoundSave.sequences_completed;
+            } else {
+                throw new Error('could not parse number of completed sequences: field is undefined in sav');
+            };
             if (jsonSoundSave.errors) {
                 savNet.errors = jsonSoundSave.errors;
             } else {
-                throw new Error('could not parse errors: errors field is undefined in sav');
+                throw new Error('could not parse errors: field is undefined in sav');
             };
             return (savNet);
         } catch (error) {

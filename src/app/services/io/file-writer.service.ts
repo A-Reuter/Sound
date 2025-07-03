@@ -7,7 +7,6 @@ import {Coords} from '../../classes/file-management/coordinates';
 import {JsonPetriNet} from '../../classes/file-management/json-petri-net';
 import {JsonSoundSave} from '../../classes/file-management/json-sound-save';
 import {Net} from '../../classes/net-representation/net';
-import {Node} from '../../classes/net-representation/node';
 
 @Injectable({
     providedIn: 'root'
@@ -311,6 +310,7 @@ export class FileWriterService {
             sequence_next : inNet.nextSequenceEntry, 
             sequence_active : [], 
             sequence_log : [], 
+            sequences_completed : 0, 
             errors : {
                 nSeq : 0, 
                 iSeq : 0, 
@@ -485,6 +485,7 @@ export class FileWriterService {
                 throw new Error('#srv.fws.nts.004: ' + 'conversion of net to sav failed - firing sequence of length \'' + logSequence.length + '\' detected in the simulation log');
             };
         };
+        jsonSoundSave.sequences_completed = inNet.completedSequences;
         jsonSoundSave.errors = inNet.errors;
         return jsonSoundSave;
     };

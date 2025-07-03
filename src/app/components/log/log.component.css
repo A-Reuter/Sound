@@ -17,6 +17,12 @@
     overflow: scroll;
 }
 
+.log-info {
+    font-size: 12px;
+    margin-left: 10px;
+    color: rgb(190, 190, 190);
+}
+
 /* .log:hover {
     border-color: darkgrey;
 } */

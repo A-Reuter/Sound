@@ -24,15 +24,15 @@ export abstract class Node {
     private _hoverCancelled : boolean;
 
     private _svgElements : {
-        node             : SVGElement | undefined,
-        symbol           : SVGElement | undefined,
-        symbolText       : SVGElement | undefined,
-        symbolBackground : SVGElement | undefined,
-        label            : SVGElement | undefined,
-        id               : SVGElement | undefined,
-        info             : SVGElement | undefined,
-        infoTextType     : SVGElement | undefined,
-        infoTextPosition : SVGElement | undefined,
+        node             : (SVGElement | undefined),
+        symbol           : (SVGElement | undefined),
+        symbolText       : (SVGElement | undefined),
+        symbolBackground : (SVGElement | undefined),
+        label            : (SVGElement | undefined),
+        id               : (SVGElement | undefined),
+        info             : (SVGElement | undefined),
+        infoTextType     : (SVGElement | undefined),
+        infoTextPosition : (SVGElement | undefined),
     };
 
     /* methods : constructor */

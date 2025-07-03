@@ -71,6 +71,8 @@ export interface JsonSoundSave {
         valid : boolean
     }[][],
 
+    sequences_completed : number,
+
     errors : {
         nSeq : number,
         iSeq : number,

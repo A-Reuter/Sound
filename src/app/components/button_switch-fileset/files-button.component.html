@@ -1,0 +1,14 @@
+<button mat-fab 
+        class="button" 
+        [matTooltip]="tooltip" 
+        (click)="processMouseClick()">
+    @if (examples) {
+        <mat-icon>
+            chevron_right
+        </mat-icon>
+    } @else {
+        <mat-icon>
+            chevron_left
+        </mat-icon>
+    }
+</button>

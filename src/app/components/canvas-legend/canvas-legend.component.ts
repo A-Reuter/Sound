@@ -32,6 +32,7 @@ export class CanvasLegendComponent implements OnDestroy {
 
     private _hovered : boolean;
 
+    private _autorunExec : boolean;
     private _displayMode : ('default' | 'traveled' | 'errors');
 
     /* methods - constructor */
@@ -41,9 +42,13 @@ export class CanvasLegendComponent implements OnDestroy {
         private readonly settingsService : SettingsService,
     ) {
         this._hovered = false;
+        this._autorunExec = this.settingsService.state.autorunExec;
         this._displayMode = this.settingsService.state.displayMode;
         this._settingsSubscription = this.settingsService.state$.subscribe(
             state => {
+                if (this._autorunExec !== state.autorunExec) {
+                    this._autorunExec = state.autorunExec;
+                };
                 if (this._displayMode !== state.displayMode) {
                     this._displayMode = state.displayMode;
                 };
@@ -58,6 +63,10 @@ export class CanvasLegendComponent implements OnDestroy {
     };
 
     /* methods - getters */
+    
+    public get autorunExec() : boolean {
+        return this._autorunExec;
+    };
     
     public get displaymode() : ('default' | 'traveled' | 'errors') {
         return this._displayMode;
@@ -109,6 +118,14 @@ export class CanvasLegendComponent implements OnDestroy {
     
     public get enabledStyleF() : string {
         return ('background-color:' + this.graphicsConfigService.enabledFill);
+    };
+    
+    public get seqErrStyleS() : string {
+        return ('background-color:' + this.graphicsConfigService.seqErrStroke);
+    };
+    
+    public get seqErrStyleF() : string {
+        return ('background-color:' + this.graphicsConfigService.seqErrFill);
     };
     
     public get seqLogStyleS() : string {

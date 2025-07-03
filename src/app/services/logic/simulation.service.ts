@@ -1318,6 +1318,7 @@ export class SimulationService implements OnDestroy {
         while ((this.settingsService.state.autorunExec) && (!(this.settingsService.state.autorunStop))) {
             if (this._lastResult.sequenceTerminated) {
                 this.initializeMarking();
+                this.settingsService.update({overwriteTraveledColors : false});
             } else {
                 const arraySize : number = this._currentlyEnabled.length;
                 if (arraySize <= 0) {
@@ -1331,22 +1332,47 @@ export class SimulationService implements OnDestroy {
                     throw new Error('#srv.sim.ers.002: ' + 'executing random sequence failed - the transition chosen to be fired is undefined');
                 };
                 this.fireTransition(chosenTransition);
+                if (this._lastResult.validMarking !== true) {
+                    this.settingsService.update({overwriteTraveledColors : true});
+                };
             };
             await new Promise(resolve => setTimeout(resolve, this.settingsService.state.autorunTime));
         };
         if (this.settingsService.state.switchDisplayModeOnRun) {
-            this.settingsService.update({
-                autorunExec : false, 
-                autorunStop : false, 
-                displayMode : originalConfigDM, 
-                switchDisplayModeOnError : originalConfigSM
-            });
+            if ((this._lastResult.validMarking !== true) && (originalConfigSM)) {
+                this.settingsService.update({
+                    autorunExec : false, 
+                    autorunStop : false, 
+                    displayMode : 'errors', 
+                    overwriteTraveledColors : false, 
+                    switchDisplayModeOnError : originalConfigSM
+                });
+            } else {
+                this.settingsService.update({
+                    autorunExec : false, 
+                    autorunStop : false, 
+                    displayMode : originalConfigDM, 
+                    overwriteTraveledColors : false, 
+                    switchDisplayModeOnError : originalConfigSM
+                });
+            };
         } else {
-            this.settingsService.update({
-                autorunExec : false, 
-                autorunStop : false, 
-                switchDisplayModeOnError : originalConfigSM
-            });
+            if ((this._lastResult.validMarking !== true) && (originalConfigSM)) {
+                this.settingsService.update({
+                    autorunExec : false, 
+                    autorunStop : false, 
+                    displayMode : 'errors', 
+                    overwriteTraveledColors : false, 
+                    switchDisplayModeOnError : originalConfigSM
+                });
+            } else {
+                this.settingsService.update({
+                    autorunExec : false, 
+                    autorunStop : false, 
+                    overwriteTraveledColors : false, 
+                    switchDisplayModeOnError : originalConfigSM
+                });
+            };
         };
     };
 
@@ -1460,6 +1486,7 @@ export class SimulationService implements OnDestroy {
                 this.popupService.error('srv.sim.sfs.002', 'inconsistent internal data state', 'it is recommended to restart the tool');
                 throw new Error('#srv.sim.sfs.002: ' + 'saving sequence failed - the firing sequence to be saved was found at ' + foundIndices.length + ' locations within the log');
             };
+            this.net.completedSequences++;
             this.net.unsavedSequence = false;
         };
     };

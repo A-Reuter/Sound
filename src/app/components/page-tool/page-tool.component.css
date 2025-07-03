@@ -15,8 +15,17 @@
     margin-bottom: 7px;
 }
 
-.container_files {
-    width: 480px;
+.container_examples {
+    min-width: 610px;
+    height: 42px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.container_exercises {
+    min-width: 610px;
     height: 42px;
     display: flex;
     flex-direction: row;
@@ -52,13 +61,13 @@
 }
 
 .gap_control_row_left {
-    width: calc(50% - 550px - 165px);
+    width: calc(50% - 730px - 140px);
     min-width: 50px;
     height: 100%;
 }
 
 .gap_control_row_right {
-    width: calc((50% - 165px - 40px - 380px) / 2);
+    width: calc((50% - 140px - 40px - 380px) / 2);
     min-width: 25px;
     height: 100%;
 }

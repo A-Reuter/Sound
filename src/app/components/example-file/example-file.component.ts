@@ -4,7 +4,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 @Component({
-    selector: 'app-example-file', 
+    selector: 'example-file', 
     templateUrl: './example-file.component.html', 
     styleUrls: ['./example-file.component.css'], 
     standalone: true, 

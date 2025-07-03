@@ -99,7 +99,7 @@
                 [matTooltip]="autorunTooltip" 
                 [disabled]="autorunDisabled" 
                 (click)="processAutoAction()">
-            @if (autoRunActive) {
+            @if (autorunActive) {
                 Stop Automation
             } @else {
                 Start Automation
@@ -381,17 +381,39 @@
             Sequence Automation
         </button>
         <mat-menu #saCfgMenu="matMenu">
-            <div class="slider-container"
-                 (click)="$event.stopPropagation();">
-                <div>
-                    <label>Iteration Delay: {{slider.value}}ms</label>
+            @if (sliderWarning) {
+                <div class="slider-container-warning"
+                     (click)="$event.stopPropagation();">
+                    <div>
+                        <label>
+                            <b>Epilepsy Warning</b>
+                            <br/>
+                            <i>lowering this setting will trigger very rapid color changes</i>
+                        </label>
+                    </div>
+                    <mat-checkbox class="checkbox warning" 
+                                  labelPosition="after" 
+                                  [checked]="(!(sliderWarning))" 
+                                  (change)="(sliderWarning = false)" 
+                                  (click)="$event.stopPropagation();">
+                        Unlock Feature
+                    </mat-checkbox>
                 </div>
-                <div>
-                    <mat-slider class="slider" min="0" max="5000" step="100">
-                        <input matSliderThumb [(ngModel)]="sliderValue" #slider>
-                    </mat-slider>
+            } @else {
+                <div class="slider-container"
+                     (click)="$event.stopPropagation();">
+                    <div>
+                        <label>
+                            Iteration Delay: {{slider.value}}ms
+                        </label>
+                    </div>
+                    <div>
+                        <mat-slider class="slider" min="0" max="5000" step="100">
+                            <input matSliderThumb [(ngModel)]="sliderValue" #slider>
+                        </mat-slider>
+                    </div>
                 </div>
-            </div>
+            }
         </mat-menu>
         <mat-divider></mat-divider>
         <button mat-menu-item 
@@ -480,15 +502,15 @@
         <mat-divider></mat-divider>
         <button mat-menu-item 
                 [matMenuTriggerFor]="efCfgMenu">
-            Example Files
+            File Set
         </button>
         <mat-menu #efCfgMenu="matMenu">
             <button mat-menu-item
-                    (click)="processExampleAction()">
-                @if (exampleFilesEnabled) {
-                    Hide Example Files
+                    (click)="processFilesetAction()">
+                @if (examples) {
+                    Switch to Exercises
                 } @else {
-                    Show Example Files
+                    Switch to Examples
                 }
             </button>
         </mat-menu>

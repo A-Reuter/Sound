@@ -978,6 +978,7 @@ export class CanvasComponent implements OnDestroy {
                     break;
                 }
             };
+            return;
         };
         const inputLocation = inDragEvent.dataTransfer?.getData(ExampleFileComponent.META_DATA_CODE);
         if (inputLocation) {

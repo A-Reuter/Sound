@@ -30,7 +30,7 @@ export class Net {
         addedToSequence : (Transition | Place | Arc)[],
         markingValidity : boolean
     }[][];
-
+    private _completedSequences : number;
     private _markedTransitions : Transition[];
     private _markedPlaces : Place[];
     private _markedArcs : Arc[];
@@ -73,6 +73,7 @@ export class Net {
         this._nextSequenceEntry = 0;
         this._activeSequence = [];
         this._simulationLog = [];
+        this._completedSequences = 0;
         this._markedTransitions = [];
         this._markedPlaces = [];
         this._markedArcs = [];
@@ -162,6 +163,10 @@ export class Net {
         markingValidity : boolean
     }[][] {
         return this._simulationLog;
+    };
+
+    public get completedSequences(): number {
+        return this._completedSequences;
     };
 
     public get markedTransitions() : Transition[] {
@@ -279,6 +284,10 @@ export class Net {
         if (this._empty) {
             this._empty = false;
         };
+    };
+
+    public set completedSequences(inNumber : number) {
+        this._completedSequences = inNumber;
     };
 
     public set markedTransitions(inTransitions : Transition[]) {

@@ -24,18 +24,18 @@ export class FilesButtonComponent implements OnDestroy {
 
     private readonly _settingsSubscription : Subscription;
 
-    private _exampleFilesEnabled : boolean;
+    private _displayedFileset : ('examples' | 'exercises');
 
     /* methods - constructor */
 
     constructor(
         private readonly settingsService : SettingsService,
     ) {
-        this._exampleFilesEnabled = this.settingsService.state.exampleFilesEnabled;
+        this._displayedFileset = this.settingsService.state.displayedFileset;
         this._settingsSubscription  = this.settingsService.state$.subscribe(
             net => {
-                if (this._exampleFilesEnabled !== this.settingsService.state.exampleFilesEnabled) {
-                    this._exampleFilesEnabled = this.settingsService.state.exampleFilesEnabled;
+                if (this._displayedFileset !== this.settingsService.state.displayedFileset) {
+                    this._displayedFileset = this.settingsService.state.displayedFileset;
                 };
             }
         );
@@ -49,22 +49,26 @@ export class FilesButtonComponent implements OnDestroy {
 
     /* methods - getters */
 
-    public get filesEnabled() : boolean {
-        return this._exampleFilesEnabled;
+    public get examples() : boolean {
+        return (this._displayedFileset === 'examples');
     };
 
     public get tooltip() : string {
-        if (this._exampleFilesEnabled) {
-            return 'hide example files';
+        if (this._displayedFileset !== 'examples') {
+            return 'switch to example files';
         } else {
-            return 'show example files';
+            return 'switch to exercise files';
         };
     };
 
     /* methods - other */
 
     public processMouseClick() {
-        this.settingsService.update({exampleFilesEnabled : (!(this._exampleFilesEnabled))});
+        if (this._displayedFileset !== 'examples') {
+            this.settingsService.update({displayedFileset : 'examples'});
+        } else {
+            this.settingsService.update({displayedFileset : 'exercises'});
+        };
     };
 
 };

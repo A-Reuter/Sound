@@ -25,6 +25,7 @@ export class SvgService implements OnDestroy {
     private displayMode : ('default' | 'traveled' | 'errors');
     private hideLowMarkings : boolean;
     private hideLowWeights : boolean;
+    private overwriteTraveledColors : boolean;
     private showArcWeights : boolean;
     private showNodeInfos : boolean;
     private showPlaceIds : boolean;
@@ -75,6 +76,7 @@ export class SvgService implements OnDestroy {
         this.displayMode = this.settingsService.state.displayMode;
         this.hideLowMarkings = this.settingsService.state.hideLowMarkings;
         this.hideLowWeights = this.settingsService.state.hideLowWeights;
+        this.overwriteTraveledColors = this.settingsService.state.overwriteTraveledColors;
         this.showArcWeights = this.settingsService.state.showArcWeights;
         this.showNodeInfos = this.settingsService.state.showNodeInfos;
         this.showPlaceIds = this.settingsService.state.showPlaceIds;
@@ -101,6 +103,10 @@ export class SvgService implements OnDestroy {
                 if (this.hideLowWeights !== state.hideLowWeights) {
                     this.hideLowWeights = state.hideLowWeights;
                     this.toggleArcWeights();
+                };
+                if (this.overwriteTraveledColors !== state.overwriteTraveledColors) {
+                    this.overwriteTraveledColors = state.overwriteTraveledColors;
+                    this.toggleDispayMode();
                 };
                 if (this.showArcWeights !== state.showArcWeights) {
                     this.showArcWeights = state.showArcWeights;
@@ -237,48 +243,62 @@ export class SvgService implements OnDestroy {
         arrowPathMk.setAttribute('fill', this.graphicsConfigService.markedStroke);
         arrowMarkMk.appendChild(arrowPathMk);
         arrowDefs.appendChild(arrowMarkMk);
-        const arrowMarkLg : SVGElement = this.createSvgElement('marker');
-        arrowMarkLg.setAttribute('id', 'arrow_head_seqlog');
-        arrowMarkLg.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkLg.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
-        arrowMarkLg.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
-        arrowMarkLg.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkLg.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkLg.setAttribute('markerUnits', 'strokeWidth');
-        arrowMarkLg.setAttribute('orient', 'auto');
-        const arrowPathLg : SVGElement = this.createSvgElement('path');
-        arrowPathLg.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
-        arrowPathLg.setAttribute('fill', this.graphicsConfigService.seqLogStroke);
-        arrowMarkLg.appendChild(arrowPathLg);
-        arrowDefs.appendChild(arrowMarkLg);
-        const arrowMarkPs : SVGElement = this.createSvgElement('marker');
-        arrowMarkPs.setAttribute('id', 'arrow_head_seqpast');
-        arrowMarkPs.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkPs.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
-        arrowMarkPs.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
-        arrowMarkPs.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkPs.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkPs.setAttribute('markerUnits', 'strokeWidth');
-        arrowMarkPs.setAttribute('orient', 'auto');
-        const arrowPathPs : SVGElement = this.createSvgElement('path');
-        arrowPathPs.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
-        arrowPathPs.setAttribute('fill', this.graphicsConfigService.seqPastStroke);
-        arrowMarkPs.appendChild(arrowPathPs);
-        arrowDefs.appendChild(arrowMarkPs);
-        const arrowMarkNx : SVGElement = this.createSvgElement('marker');
-        arrowMarkNx.setAttribute('id', 'arrow_head_seqnext');
-        arrowMarkNx.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkNx.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
-        arrowMarkNx.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
-        arrowMarkNx.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkNx.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
-        arrowMarkNx.setAttribute('markerUnits', 'strokeWidth');
-        arrowMarkNx.setAttribute('orient', 'auto');
-        const arrowPathNx : SVGElement = this.createSvgElement('path');
-        arrowPathNx.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
-        arrowPathNx.setAttribute('fill', this.graphicsConfigService.seqNextStroke);
-        arrowMarkNx.appendChild(arrowPathNx);
-        arrowDefs.appendChild(arrowMarkNx);
+        const arrowMarkSE : SVGElement = this.createSvgElement('marker');
+        arrowMarkSE.setAttribute('id', 'arrow_head_seqerr');
+        arrowMarkSE.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSE.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
+        arrowMarkSE.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
+        arrowMarkSE.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSE.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSE.setAttribute('markerUnits', 'strokeWidth');
+        arrowMarkSE.setAttribute('orient', 'auto');
+        const arrowPathSE : SVGElement = this.createSvgElement('path');
+        arrowPathSE.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
+        arrowPathSE.setAttribute('fill', this.graphicsConfigService.seqErrStroke);
+        arrowMarkSE.appendChild(arrowPathSE);
+        arrowDefs.appendChild(arrowMarkSE);
+        const arrowMarkSL : SVGElement = this.createSvgElement('marker');
+        arrowMarkSL.setAttribute('id', 'arrow_head_seqlog');
+        arrowMarkSL.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSL.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
+        arrowMarkSL.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
+        arrowMarkSL.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSL.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSL.setAttribute('markerUnits', 'strokeWidth');
+        arrowMarkSL.setAttribute('orient', 'auto');
+        const arrowPathSL : SVGElement = this.createSvgElement('path');
+        arrowPathSL.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
+        arrowPathSL.setAttribute('fill', this.graphicsConfigService.seqLogStroke);
+        arrowMarkSL.appendChild(arrowPathSL);
+        arrowDefs.appendChild(arrowMarkSL);
+        const arrowMarkSP : SVGElement = this.createSvgElement('marker');
+        arrowMarkSP.setAttribute('id', 'arrow_head_seqpast');
+        arrowMarkSP.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSP.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
+        arrowMarkSP.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
+        arrowMarkSP.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSP.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSP.setAttribute('markerUnits', 'strokeWidth');
+        arrowMarkSP.setAttribute('orient', 'auto');
+        const arrowPathSP : SVGElement = this.createSvgElement('path');
+        arrowPathSP.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
+        arrowPathSP.setAttribute('fill', this.graphicsConfigService.seqPastStroke);
+        arrowMarkSP.appendChild(arrowPathSP);
+        arrowDefs.appendChild(arrowMarkSP);
+        const arrowMarkSN : SVGElement = this.createSvgElement('marker');
+        arrowMarkSN.setAttribute('id', 'arrow_head_seqnext');
+        arrowMarkSN.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSN.setAttribute('refX', `${(this.graphicsConfigService.defaultArrowRadius * 2) + Math.floor(this.graphicsConfigService.defaultNodeRadius / 6)}`);
+        arrowMarkSN.setAttribute('refY', `${this.graphicsConfigService.defaultArrowRadius}`);
+        arrowMarkSN.setAttribute('markerHeight', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSN.setAttribute('markerWidth', `${this.graphicsConfigService.defaultArrowRadius * 2}`);
+        arrowMarkSN.setAttribute('markerUnits', 'strokeWidth');
+        arrowMarkSN.setAttribute('orient', 'auto');
+        const arrowPathSN : SVGElement = this.createSvgElement('path');
+        arrowPathSN.setAttribute('d', `M 0 0 L ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius} L 0 ${this.graphicsConfigService.defaultArrowRadius * 2} z`);
+        arrowPathSN.setAttribute('fill', this.graphicsConfigService.seqNextStroke);
+        arrowMarkSN.appendChild(arrowPathSN);
+        arrowDefs.appendChild(arrowMarkSN);
         const arrowMarkUt : SVGElement = this.createSvgElement('marker');
         arrowMarkUt.setAttribute('id', 'arrow_head_untrv');
         arrowMarkUt.setAttribute('viewBox', `0 0 ${this.graphicsConfigService.defaultArrowRadius * 2} ${this.graphicsConfigService.defaultArrowRadius * 2}`);
@@ -435,9 +455,9 @@ export class SvgService implements OnDestroy {
         const radius : number = this.graphicsConfigService.defaultInnerLogElementRadius;
         const strokeI : number = this.graphicsConfigService.defaultInnerLogStrokeWidth;
         const strokeO : number = this.graphicsConfigService.defaultOuterLogStrokeWidth;
-        const offsetL : number = (0.3 * radius);
-        const offsetM : number = (0.525 * radius);
-        const offsetS : number = (0.75 * radius);
+        const offsetS : number = (0.3 * radius);
+        const offsetM : number = (0.6 * radius);
+        const offsetL : number = (0.9 * radius);
         const fillFrame : string = this.graphicsConfigService.logBoxFill;
         const fillNeutral : string = this.graphicsConfigService.neutralFill;
         const fillInvalid : string = this.graphicsConfigService.invalidFill;
@@ -515,16 +535,16 @@ export class SvgService implements OnDestroy {
             svgLabel.setAttribute('customType', 'log-element');
             svgLabel.setAttribute('id', id);
             svgLabel.setAttribute('visibility', 'visible');
-            svgLabel.setAttribute('x', `${width + radius - offsetL}`);
-            svgLabel.setAttribute('y', `${(2 * frame) + radius + offsetL}`);
+            svgLabel.setAttribute('x', `${width + radius - offsetS}`);
+            svgLabel.setAttribute('y', `${(2 * frame) + radius + offsetS}`);
             svgLabel.setAttribute('fill', strokeDefault);
             svgLabel.setAttribute('font-size', `${radius}`);
             svgLabel.textContent = (`${step.firedTransition.short}`);
             if (svgLabel.textContent.length > 1) {
                 if (svgLabel.textContent.length > 2) {
-                    svgLabel.setAttribute('textLength', '30');
-                    svgLabel.setAttribute('lengthAdjust', 'spacingAndGlyphs');
-                    svgLabel.setAttribute('x', `${width + radius - offsetS}`);
+                    // svgLabel.setAttribute('textLength', '30');
+                    // svgLabel.setAttribute('lengthAdjust', 'spacingAndGlyphs');
+                    svgLabel.setAttribute('x', `${width + radius - offsetL}`);
                 } else {
                     svgLabel.removeAttribute('textLength');
                     svgLabel.removeAttribute('lengthAdjust');
@@ -767,7 +787,7 @@ export class SvgService implements OnDestroy {
         text1.setAttribute('y', `${10}`);
         text1.setAttribute('dy', '1.1em');
         text1.setAttribute('fill', this.graphicsConfigService.textFill);
-        text1.textContent = (`id : ` + `${inPlace.id}`);
+        text1.textContent = (`id  \xa0\xa0\xa0\xa0\xa0: ` + `${inPlace.id}`);
         if (text1.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text1.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text1.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -782,7 +802,7 @@ export class SvgService implements OnDestroy {
         text2.setAttribute('y', `${10}`);
         text2.setAttribute('dy', '2.1em');
         text2.setAttribute('fill', 'Black');
-        text2.textContent = (`label : ` + `'${inPlace.label}'`);
+        text2.textContent = (`label \xa0\xa0: ` + `'${inPlace.label}'`);
         if (text2.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text2.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text2.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -797,7 +817,7 @@ export class SvgService implements OnDestroy {
         text3.setAttribute('y', `${10}`);
         text3.setAttribute('dy', '3.1em');
         text3.setAttribute('fill', this.graphicsConfigService.textFill);
-        text3.textContent = (`type : ` + inPlace.type);
+        text3.textContent = (`type  \xa0\xa0\xa0: ` + inPlace.type);
         if (text3.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text3.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text3.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -869,7 +889,7 @@ export class SvgService implements OnDestroy {
         text1.setAttribute('y', `${10}`);
         text1.setAttribute('dy', '1.1em');
         text1.setAttribute('fill', this.graphicsConfigService.textFill);
-        text1.textContent = (`id : ` + `${inTransition.id}`);
+        text1.textContent = (`id \xa0\xa0\xa0\xa0\xa0: ` + `${inTransition.id}`);
         if (text1.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text1.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text1.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -884,7 +904,7 @@ export class SvgService implements OnDestroy {
         text2.setAttribute('y', `${10}`);
         text2.setAttribute('dy', '2.1em');
         text2.setAttribute('fill', 'Black');
-        text2.textContent = (`label : ` + `'${inTransition.label}'`);
+        text2.textContent = (`label \xa0\xa0: ` + `'${inTransition.label}'`);
         if (text2.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text2.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text2.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -899,7 +919,7 @@ export class SvgService implements OnDestroy {
         text3.setAttribute('y', `${10}`);
         text3.setAttribute('dy', '3.1em');
         text3.setAttribute('fill', this.graphicsConfigService.textFill);
-        text3.textContent = (`type : ` + inTransition.type);
+        text3.textContent = (`type \xa0\xa0\xa0: ` + inTransition.type);
         if (text3.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
             text3.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
             text3.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -1034,25 +1054,49 @@ export class SvgService implements OnDestroy {
                         svg.setAttribute('stroke', this.graphicsConfigService.markedStroke);
                     } else if (inPlace.active) {
                         svg.setAttribute('stroke', this.graphicsConfigService.activeStroke);
-                    } else if (inPlace.inSequenceNext) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqNextStroke);
-                    } else if (inPlace.inSequencePast) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqPastStroke);
-                    } else if (inPlace.inSequenceLog) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                    } else if (this.overwriteTraveledColors) {
+                        if (inPlace.errorLevel2) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.errLvl2Stroke);
+                        } else if (inPlace.inSequencePast) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqErrStroke);
+                        } else if (inPlace.inSequenceLog) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                        } else {
+                            svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                        };
                     } else {
-                        svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                       if (inPlace.inSequenceNext) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqNextStroke);
+                        } else if (inPlace.inSequencePast) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqPastStroke);
+                        } else if (inPlace.inSequenceLog) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                        } else {
+                            svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                        };
                     };
                     if (inPlace.active) {
                         svg.setAttribute('fill', this.graphicsConfigService.activeFill);
-                    } else if (inPlace.inSequenceNext) {
-                        svg.setAttribute('fill', this.graphicsConfigService.seqNextFill);
-                    } else if (inPlace.inSequencePast) {
-                        svg.setAttribute('fill', this.graphicsConfigService.seqPastFill);
-                    } else if (inPlace.inSequenceLog) {
-                        svg.setAttribute('fill', this.graphicsConfigService.seqLogFill);
+                    } else if (this.overwriteTraveledColors) {
+                        if (inPlace.errorLevel2) {
+                            svg.setAttribute('fill', this.graphicsConfigService.errLvl2Fill);
+                        } else if (inPlace.inSequencePast) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqErrFill);
+                        } else if (inPlace.inSequenceLog) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqLogFill);
+                        } else {
+                            svg.setAttribute('fill', this.graphicsConfigService.untrvFill);
+                        };
                     } else {
-                        svg.setAttribute('fill', this.graphicsConfigService.untrvFill);
+                        if (inPlace.inSequenceNext) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqNextFill);
+                        } else if (inPlace.inSequencePast) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqPastFill);
+                        } else if (inPlace.inSequenceLog) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqLogFill);
+                        } else {
+                            svg.setAttribute('fill', this.graphicsConfigService.untrvFill);
+                        };
                     };
                     break;
                 }
@@ -1163,7 +1207,7 @@ export class SvgService implements OnDestroy {
     public setSVGPlaceInfoTextP(inPlace : Place) : void {
         const svg : (SVGElement | undefined) = inPlace.svgElements.infoTextPosition;
         if (svg) {
-            svg.textContent = (`coords : ` + `(${inPlace.x}|${inPlace.y})`);
+            svg.textContent = (`coords \xa0: ` + `(${inPlace.x}|${inPlace.y})`);
             if (svg.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
                 svg.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
                 svg.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -1210,25 +1254,49 @@ export class SvgService implements OnDestroy {
                         svg.setAttribute('stroke', this.graphicsConfigService.markedStroke);
                     } else if (inTransition.active) {
                         svg.setAttribute('stroke', this.graphicsConfigService.activeStroke);
-                    } else if (inTransition.inSequenceNext) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqNextStroke);
-                    } else if (inTransition.inSequencePast) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqPastStroke);
-                    } else if (inTransition.inSequenceLog) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                    } else if (this.overwriteTraveledColors) {
+                        if (inTransition.errorLevel2) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.errLvl2Stroke);
+                        } else if (inTransition.inSequencePast) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqErrStroke);
+                        } else if (inTransition.inSequenceLog) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                        } else {
+                            svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                        };
                     } else {
-                        svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                        if (inTransition.inSequenceNext) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqNextStroke);
+                        } else if (inTransition.inSequencePast) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqPastStroke);
+                        } else if (inTransition.inSequenceLog) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                        } else {
+                            svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                        };
                     };
                     if (inTransition.active) {
                         svg.setAttribute('fill', this.graphicsConfigService.activeFill);
-                    } else if (inTransition.inSequenceNext) {
-                        svg.setAttribute('fill', this.graphicsConfigService.seqNextFill);
-                    } else if (inTransition.inSequencePast) {
-                        svg.setAttribute('fill', this.graphicsConfigService.seqPastFill);
-                    } else if (inTransition.inSequenceLog) {
-                        svg.setAttribute('fill', this.graphicsConfigService.seqLogFill);
+                    } else if (this.overwriteTraveledColors) {
+                        if (inTransition.errorLevel2) {
+                            svg.setAttribute('fill', this.graphicsConfigService.errLvl2Fill);
+                        } else if (inTransition.inSequencePast) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqErrFill);
+                        } else if (inTransition.inSequenceLog) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqLogFill);
+                        } else {
+                            svg.setAttribute('fill', this.graphicsConfigService.untrvFill);
+                        };
                     } else {
-                        svg.setAttribute('fill', this.graphicsConfigService.untrvFill);
+                        if (inTransition.inSequenceNext) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqNextFill);
+                        } else if (inTransition.inSequencePast) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqPastFill);
+                        } else if (inTransition.inSequenceLog) {
+                            svg.setAttribute('fill', this.graphicsConfigService.seqLogFill);
+                        } else {
+                            svg.setAttribute('fill', this.graphicsConfigService.untrvFill);
+                        };
                     };
                     break;
                 }
@@ -1287,7 +1355,7 @@ export class SvgService implements OnDestroy {
     public setSVGTransitionInfoTextP(inTransition : Transition) : void {
         const svg : (SVGElement | undefined) = inTransition.svgElements.infoTextPosition;
         if (svg) {
-            svg.textContent = (`coords : ` + `(${inTransition.x}|${inTransition.y})`);
+            svg.textContent = (`coords \xa0: ` + `(${inTransition.x}|${inTransition.y})`);
             if (svg.textContent.length > this.graphicsConfigService.defaultMaxTextWidth) {
                 svg.setAttribute('textLength', `${this.graphicsConfigService.defaultTextBoxWidth - 20}`);
                 svg.setAttribute('lengthAdjust', 'spacingAndGlyphs');
@@ -1436,18 +1504,34 @@ export class SvgService implements OnDestroy {
                     } else if (inArc.marked) {
                         svg.setAttribute('stroke', this.graphicsConfigService.markedStroke);
                         svg.setAttribute('marker-end', 'url(#arrow_head_marked)');
-                    } else if (inArc.inSequenceNext) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqNextStroke);
-                        svg.setAttribute('marker-end', 'url(#arrow_head_seqnext)');
-                    } else if (inArc.inSequencePast) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqPastStroke);
-                        svg.setAttribute('marker-end', 'url(#arrow_head_seqpast)');
-                    } else if (inArc.inSequenceLog) {
-                        svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
-                        svg.setAttribute('marker-end', 'url(#arrow_head_seqlog)');
+                    } else if (this.overwriteTraveledColors) {
+                        if (inArc.errorLevel2) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.errLvl2Stroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_errlvl2)');
+                        } else if (inArc.inSequencePast) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqErrStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_seqerr)');
+                        } else if (inArc.inSequenceLog) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_seqlog)');
+                        } else {
+                            svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_untrv)');
+                        };
                     } else {
-                        svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
-                        svg.setAttribute('marker-end', 'url(#arrow_head_untrv)');
+                        if (inArc.inSequenceNext) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqNextStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_seqnext)');
+                        } else if (inArc.inSequencePast) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqPastStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_seqpast)');
+                        } else if (inArc.inSequenceLog) {
+                            svg.setAttribute('stroke', this.graphicsConfigService.seqLogStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_seqlog)');
+                        } else {
+                            svg.setAttribute('stroke', this.graphicsConfigService.untrvStroke);
+                            svg.setAttribute('marker-end', 'url(#arrow_head_untrv)');
+                        };
                     };
                     break;
                 }

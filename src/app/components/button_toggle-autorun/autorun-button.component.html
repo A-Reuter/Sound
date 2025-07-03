@@ -4,9 +4,15 @@
             [disabled]="disabled" 
             (click)="processMouseClick()">
         @if (showPause) {
-            <mat-icon>pause</mat-icon>
+            <mat-icon>
+                pause
+                <!-- last_page -->
+            </mat-icon>
         } @else {
-            <mat-icon>play_arrow</mat-icon>
+            <mat-icon>
+                <!-- play_arrow -->
+                fast_forward
+            </mat-icon>
         }
     </button>
 </div>
