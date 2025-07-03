@@ -199,7 +199,8 @@ export class SettingsService {
         autorunTime                     : 1000,
         canvasLegendEnabled             : false,
         dataLoaded                      : false,
-        displayedFileset                : 'examples',
+        /* TO BE CHANGED -- switch default value for "displayedFileset" (set below) from 'exercises' to 'examples' */
+        displayedFileset                : 'exercises', // 'examples',
         displayMode                     : 'default',
         errorInfoNetEnabled             : false,
         errorInfoSeqEnabled             : false,
