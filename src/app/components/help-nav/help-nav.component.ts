@@ -18,7 +18,7 @@ export class HelpNavComponent {
     
     private readonly _subpages = [
         {
-            route : 'reference',
+            route : 'guide',
             label : 'Quick Guide',
             icon : 'menu_book'
         },
@@ -38,7 +38,7 @@ export class HelpNavComponent {
             icon : 'format_quote'
         },
         {
-            route : 'overview',
+            route : 'info',
             label : 'Info',
             icon : 'info_outline'
         }

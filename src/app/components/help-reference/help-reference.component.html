@@ -8,9 +8,9 @@
                 Start by loading a petri net from a file via the file menu or by dragging it onto the canvas.
             </li>
             <li>
-                After a petri net has been successfully loaded, the tool automatically tests if it is a workflow net. <br/>
+                After a petri net has been successfully loaded, the tool automatically tests if it is a workflow net.
                 Should this not be the case, an error will be thrown and a new button will appear in the top right corner of the canvas, 
-                which can be used to open the error information panel listing more details about the unfulfilled condition(s). <br/>
+                which can be used to open the error information panel listing more details about the unfulfilled condition(s).
                 If, however, the net passes the workflow check, you can then fire any enabled transition by clicking on it.
             </li>
             <li>
@@ -20,11 +20,11 @@
             </li>
             <li>
                 After each firing action, the net marking is changed accordingly, and the tool determines whether the reached marking 
-                is in conflict with the first two criteria of the soundness property (pertaining to termination and its correctness). <br/>
+                is in conflict with the first two criteria of the soundness property (pertaining to termination and its correctness).
                 When such a conflict is detected, an error will be thrown and once again details will be made accessible through the error information panel. <br/>
-                Conformance to the third criterion (pertaining to transition liveness) is similarly checked after each firing action. <br/>
+                Conformance to the third criterion (pertaining to transition liveness) is checked whenever a sequence terminates.
                 Should a given net contain at least one dead transition, an error state pertaining to all dead transitions 
-                will be triggered on sequence completion once every live transition has been fired at least once. <br/>
+                will be triggered on sequence termination once every live transition has been fired at least once.
                 Progress on verifying conformance to this criterion can be checked manually by switching 
                 to the traveled display mode and looking for unvisited transitions.
             </li>
@@ -48,7 +48,7 @@
             </li>
             <li>
                 Finally, the current progress - including net, current marking, active sequence, sequence log & found errors - 
-                can be saved to a .sav file anytime to be loaded back later.
+                can be saved to a .sav file anytime to be restored later.
             </li>
         </ul>
     </div>

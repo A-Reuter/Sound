@@ -42,7 +42,7 @@ export class SimulationService implements OnDestroy {
     private readonly _workflowSubject = (new BehaviorSubject<boolean>(false));
     private readonly _workflow$: Observable<boolean> = this._workflowSubject.asObservable();
 
-    private _foundError : ('noTermination' | 'invalidTermination' | 'deadTransitions' | 'noError') = 'noError';
+    private _foundErrors : ('noTermination' | 'invalidTermination' | 'deadTransitions')[] = [];
 
     private _strictWorkflowChecksEnabled : boolean;
     private _workflowInvalidArcs : Arc[] = [];
@@ -88,7 +88,7 @@ export class SimulationService implements OnDestroy {
                 };
                 this._errorInfoSubject.next(this._defaultErrorInfo);
                 this._errorsSubject.next(this.net.errors);
-                this._foundError = 'noError';
+                this._foundErrors = [];
                 this._workflowInvalidArcs = [];
                 this._deadTransitions = [];
                 if (this.net.empty) {
@@ -667,7 +667,7 @@ export class SimulationService implements OnDestroy {
         validMarking : boolean
     } {
         this.testInitialMarking();
-        this._foundError = 'noError';
+        this._foundErrors = [];
         const errorArray : ErrorItemBucket[] = [];
         if (this.net.sourcePlaces.length !== 1) {
             this.popupService.error('srv.sim.tmk.000', 'inconsistent internal data state', 'it is recommended to restart the tool');
@@ -713,7 +713,7 @@ export class SimulationService implements OnDestroy {
                 errorArray.push(new ErrorItemBucket('list', errorItems, true));
                 result.validMarking = false;
                 result.sequenceTerminated = true;
-                this._foundError = 'invalidTermination';
+                this._foundErrors.push('invalidTermination');
             } else {
                 if (sink.marking > 1) {
                     errorArray.push(new ErrorItemBucket('text', ['', 'soundness condition 2 not met - the process terminated incorrectly: the reached marking contains more than one token on the sink place'], false));
@@ -721,7 +721,7 @@ export class SimulationService implements OnDestroy {
                     this.svgService.setElementErrLvl2Flag(sink, true);
                     result.validMarking = false;
                     result.sequenceTerminated = true;
-                    this._foundError = 'invalidTermination';
+                    this._foundErrors.push('invalidTermination');
                 } else {
                     result.validMarking = true;
                     result.sequenceTerminated = true;
@@ -741,21 +741,21 @@ export class SimulationService implements OnDestroy {
                 this.svgService.setElementErrLvl1Flag(sink, true);
                 result.validMarking = false;
                 result.sequenceTerminated = true;
-                this._foundError = 'noTermination';
+                this._foundErrors.push('noTermination');
             };
         };
-        let notDead = true;
+        let sequenceLive = true;
         if ((this._deadTransitions.length > 0) && (result.sequenceTerminated)) {
             let noLiveUntraveled : boolean = true;
             for (const transition of this.net.transitions) {
-                let notDead : boolean = true;
+                let transitionLive : boolean = true;
                 for (const dead of this._deadTransitions) {
                     if (transition === dead) {
-                        notDead = false;
+                        transitionLive = false;
                         break;
                     };
                 };
-                if (notDead) {
+                if (transitionLive) {
                     if ((!(transition.inSequenceLog)) && (!(transition.inSequencePast))) {
                         noLiveUntraveled = false;
                         break;
@@ -765,7 +765,6 @@ export class SimulationService implements OnDestroy {
                         this.popupService.error('srv.sim.tmk.002', 'inconsistent internal data state', 'it is recommended to restart the tool');
                         throw new Error('#srv.sim.tmk.002: ' + 'marking test failed - dead transition is flagged as part of a sequence');
                     };
-                    this._foundError = 'deadTransitions';
                 };
             };
             if (noLiveUntraveled) {
@@ -782,10 +781,11 @@ export class SimulationService implements OnDestroy {
                     };
                     errorArray.push(new ErrorItemBucket('list', errorItems, true));
                 };
-                notDead = false;
+                this._foundErrors.push('deadTransitions');
+                sequenceLive = false;
             };
         };
-        if ((result.validMarking) && (notDead)) {
+        if ((result.validMarking) && (sequenceLive)) {
             this._errorInfoSubject.next(new ErrorInfo([new ErrorParagraph('marking does not contradict soundness', errorArray)]));
             if ((this.settingsService.state.switchDisplayModeOnError) && (this._modeAutoChanged)) {
                 this.settingsService.update({displayMode : this._previousMode});
@@ -1440,47 +1440,39 @@ export class SimulationService implements OnDestroy {
                     this.popupService.error('srv.sim.sfs.000', 'component malfunction', 'it is recommended to restart the tool');
                     throw new Error('#srv.sim.sfs.000: ' + 'saving sequence failed - the log component is undefined');
                 };
-                const errState : {
-                    nSeq : number,
-                    iSeq : number,
-                    dTrs : number
-                } = this.net.errors;
-                switch (this._foundError) {
-                    case 'noTermination' : {
-                        console.log('nTerm error')
-                        this.net.errors = {
-                            nSeq : (this.net.errors.nSeq + 1), 
-                            iSeq : (this.net.errors.iSeq), 
-                            dTrs : (this.net.errors.dTrs)
-                        };
-                        this._errorsSubject.next(this.net.errors);
-                        this.settingsService.update({errorInNet : true});
-                        break;
-                    }
-                    case 'invalidTermination' : {
-                        console.log('iTerm error')
-                        console.log(this.net.errors)
-                        this.net.errors = {
-                            nSeq : (this.net.errors.nSeq), 
-                            iSeq : (this.net.errors.iSeq + 1), 
-                            dTrs : (this.net.errors.dTrs)
-                        };
-                        console.log(this.net.errors)
-                        this._errorsSubject.next(this.net.errors);
-                        this.settingsService.update({errorInNet : true});
-                        break;
-                    }
-                    case 'deadTransitions' : {
-                        console.log('dTran error')
-                        this.net.errors = {
-                            nSeq : (this.net.errors.nSeq), 
-                            iSeq : (this.net.errors.iSeq), 
-                            dTrs : (this._deadTransitions.length)
-                        };
-                        this._errorsSubject.next(this.net.errors);
-                        this.settingsService.update({errorInNet : true});
-                        break;
-                    }
+                for (const error of this._foundErrors) {
+                    switch (error) {
+                        case 'noTermination' : {
+                            this.net.errors = {
+                                nSeq : (this.net.errors.nSeq + 1), 
+                                iSeq : (this.net.errors.iSeq), 
+                                dTrs : (this.net.errors.dTrs)
+                            };
+                            this._errorsSubject.next(this.net.errors);
+                            this.settingsService.update({errorInNet : true});
+                            break;
+                        }
+                        case 'invalidTermination' : {
+                            this.net.errors = {
+                                nSeq : (this.net.errors.nSeq), 
+                                iSeq : (this.net.errors.iSeq + 1), 
+                                dTrs : (this.net.errors.dTrs)
+                            };
+                            this._errorsSubject.next(this.net.errors);
+                            this.settingsService.update({errorInNet : true});
+                            break;
+                        }
+                        case 'deadTransitions' : {
+                            this.net.errors = {
+                                nSeq : (this.net.errors.nSeq), 
+                                iSeq : (this.net.errors.iSeq), 
+                                dTrs : (this._deadTransitions.length)
+                            };
+                            this._errorsSubject.next(this.net.errors);
+                            this.settingsService.update({errorInNet : true});
+                            break;
+                        }
+                    };
                 };
             } else if (foundIndices.length > 1){
                 this.popupService.error('srv.sim.sfs.002', 'inconsistent internal data state', 'it is recommended to restart the tool');

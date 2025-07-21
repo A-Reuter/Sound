@@ -76,7 +76,7 @@ export class FileParserService {
             } = {};
             for (const place of jsonPetriNet.places) {
                 let placeLabel : string;
-                if (jsonPetriNet.labels) {
+                if (jsonPetriNet.labels !== undefined) {
                     if (jsonPetriNet.labels[place] !== undefined) {
                         placeLabel = (jsonPetriNet.labels[place]);
                     } else {
@@ -86,7 +86,7 @@ export class FileParserService {
                     placeLabel = ('');
                 };
                 let placeInitialMarking : number;
-                if (jsonPetriNet.marking) {
+                if (jsonPetriNet.marking !== undefined) {
                     if (jsonPetriNet.marking[place] !== undefined) {
                         placeInitialMarking = jsonPetriNet.marking[place];
                     } else {
@@ -97,7 +97,7 @@ export class FileParserService {
                 };
                 let placeX : (number | undefined);
                 let placeY : (number | undefined);
-                if (jsonPetriNet.layout) {
+                if (jsonPetriNet.layout !== undefined) {
                     if (jsonPetriNet.layout[place] !== undefined) {
                         const placeCoords : Coords = (jsonPetriNet.layout[place] as Coords);
                         placeX = placeCoords.x;
@@ -116,7 +116,7 @@ export class FileParserService {
             };
             for (const transition of jsonPetriNet.transitions) {
                 let transitionLabel : string;
-                if (jsonPetriNet.labels) {
+                if (jsonPetriNet.labels !== undefined) {
                     if (jsonPetriNet.labels[transition] !== undefined) {
                         transitionLabel = (jsonPetriNet.labels[transition]);
                     } else {
@@ -127,7 +127,7 @@ export class FileParserService {
                 };
                 let transitionX : (number | undefined);
                 let transitionY : (number | undefined);
-                if (jsonPetriNet.layout) {
+                if (jsonPetriNet.layout !== undefined) {
                     if (jsonPetriNet.layout[transition] !== undefined) {
                         const transitionCoords : Coords = (jsonPetriNet.layout[transition] as Coords);
                         transitionX = transitionCoords.x;
@@ -150,11 +150,11 @@ export class FileParserService {
                     throw new Error('could not parse source and target node information for arc with id \'' + arc + '\': expected 2 values, but got ' + idPair.length);
                 };
                 const arcSource : (Place | Transition | undefined) = nodeIdMap[idPair[0]];
-                if (!arcSource) {
+                if (arcSource === undefined) {
                     throw new Error('could not parse source node for arc with id \'' + arc + '\': unknown node id');
                 };
                 const arcTarget : (Place | Transition | undefined) = nodeIdMap[idPair[1]];
-                if (!arcTarget) {
+                if (arcTarget === undefined) {
                     throw new Error('could not parse target node for arc with id \'' + arc + '\': unknown node id');
                 };
                 let arcPlace : Place;
@@ -195,7 +195,7 @@ export class FileParserService {
             if (pnmlDocument.children.length === 1) {
                 const docChildren = Array.from(pnmlDocument.children);
                 const errElem : (Element | undefined) = docChildren.find(docChild => docChild.nodeName === "parsererror");
-                if (errElem) {
+                if (errElem !== undefined) {
                     throw new Error(errElem.textContent?.split('\n')[0]);
                 };
             };
@@ -208,7 +208,7 @@ export class FileParserService {
                 const plcArray : Element[] = Array.from(plcList);
                 for (const plcElement of plcArray) {
                     const plcId : (string | undefined) = plcElement.attributes.getNamedItem('id')?.value;
-                    if (!plcId) {
+                    if (plcId === undefined) {
                         throw new Error('place element without id detected');
                     };
                     let plcMark : number = 0;
@@ -221,9 +221,9 @@ export class FileParserService {
                         if (plcNameElement && plcNameElement.hasChildNodes()) {
                             const plcNameChildren : Element[] = Array.from(plcNameElement.children);
                             const plcNameText : (Element | undefined) = plcNameChildren.find(plcNameChild => plcNameChild.nodeName === "text");
-                            if (plcNameText) {
+                            if (plcNameText !== undefined) {
                                 const plcText : (string | null | undefined) = plcNameText.textContent;
-                                if (plcText) {
+                                if ((plcText !== undefined) && (plcText !== null)) {
                                     plcLabel = plcText;
                                 };
                             };
@@ -232,13 +232,13 @@ export class FileParserService {
                         if (plcGraphicsElement && plcGraphicsElement.hasChildNodes()) {
                             const plcGraphicsChildren : Element[] = Array.from(plcGraphicsElement.children);
                             const plcGraphicsPosition : (Element | undefined) = plcGraphicsChildren.find(plcGraphicsChild => plcGraphicsChild.nodeName === "position");
-                            if (plcGraphicsPosition) {
+                            if (plcGraphicsPosition !== undefined) {
                                 const plcPositionX : (string | undefined) = plcGraphicsPosition.attributes.getNamedItem('x')?.value;
-                                if (plcPositionX) {
+                                if (plcPositionX !== undefined) {
                                     plcCoordsX = (Math.round(parseFloat(plcPositionX)));
                                 };
                                 const plcPositionY : (string | undefined) = plcGraphicsPosition.attributes.getNamedItem('y')?.value;
-                                if (plcPositionY) {
+                                if (plcPositionY !== undefined) {
                                     plcCoordsY = (Math.round(parseFloat(plcPositionY)));
                                 };
                             };
@@ -247,9 +247,9 @@ export class FileParserService {
                         if (plcMarkingElement && plcMarkingElement.hasChildNodes()) {
                             const plcMarkingChildren : Element[] = Array.from(plcMarkingElement.children);
                             const plcMarkingText : (Element | undefined) = plcMarkingChildren.find(plcMarkingChild => plcMarkingChild.nodeName === "text");
-                            if (plcMarkingText) {
+                            if (plcMarkingText !== undefined) {
                                 const plcMarking : (string | null | undefined) = plcMarkingText.textContent;
-                                if (plcMarking) {
+                                if ((plcMarking !== undefined) && (plcMarking !== null)) {
                                     plcMark = parseInt(plcMarking);
                                 };
                             };
@@ -272,7 +272,7 @@ export class FileParserService {
                 const trsArray : Element[] = Array.from(trsList);
                 for (const trsElement of trsArray) {
                     const trsId : (string | undefined) = trsElement.attributes.getNamedItem('id')?.value;
-                    if (!trsId) {
+                    if (trsId === undefined) {
                         throw new Error('transition element without id detected');
                     };
                     let trsLabel : string = '';
@@ -284,9 +284,9 @@ export class FileParserService {
                         if (trsNameElement && trsNameElement.hasChildNodes()) {
                             const trsNameChildren : Element[] = Array.from(trsNameElement.children);
                             const trsNameText : (Element | undefined) = trsNameChildren.find(trsNameChild => trsNameChild.nodeName === "text");
-                            if (trsNameText) {
+                            if (trsNameText !== undefined) {
                                 const trsText : (string | null | undefined) = trsNameText.textContent;
-                                if (trsText) {
+                                if ((trsText !== undefined) && (trsText !== null)) {
                                     trsLabel = trsText;
                                 };
                             };
@@ -295,13 +295,13 @@ export class FileParserService {
                         if (trsGraphicsElement && trsGraphicsElement.hasChildNodes()) {
                             const trsGraphicsChildren : Element[] = Array.from(trsGraphicsElement.children);
                             const trsGraphicsPosition : (Element | undefined) = trsGraphicsChildren.find(trsGraphicsChild => trsGraphicsChild.nodeName === "position");
-                            if (trsGraphicsPosition) {
+                            if (trsGraphicsPosition !== undefined) {
                                 const trsPositionX : (string | undefined) = trsGraphicsPosition.attributes.getNamedItem('x')?.value;
-                                if (trsPositionX) {
+                                if (trsPositionX !== undefined) {
                                     trsCoordsX = (Math.round(parseFloat(trsPositionX)));
                                 };
                                 const trsPositionY : (string | undefined) = trsGraphicsPosition.attributes.getNamedItem('y')?.value;
-                                if (trsPositionY) {
+                                if (trsPositionY !== undefined) {
                                     trsCoordsY = (Math.round(parseFloat(trsPositionY)));
                                 };
                             };
@@ -324,19 +324,19 @@ export class FileParserService {
                 const arcArray : Element[] = Array.from(arcList);
                 for (const arcElement of arcArray) {
                     const arcSourceId : (string | undefined) = arcElement.attributes.getNamedItem('source')?.value;
-                    if (!arcSourceId) {
+                    if (arcSourceId === undefined) {
                         throw new Error('arc element without source node id detected');
                     };
                     const arcTargetId : (string | undefined) = arcElement.attributes.getNamedItem('target')?.value;
-                    if (!arcTargetId) {
+                    if (arcTargetId === undefined) {
                         throw new Error('arc element without target node id detected');
                     };
                     const arcSource : (Place | Transition | undefined) = nodeIdMap[arcSourceId];
-                    if (!arcSource) {
+                    if (arcSource === undefined) {
                         throw new Error('arc element with unknown source node id detected');
                     };
                     const arcTarget : (Place | Transition | undefined) = nodeIdMap[arcTargetId];
-                    if (!arcTarget) {
+                    if (arcTarget === undefined) {
                         throw new Error('arc element with unknown target node id detected');
                     };
                     let arcPlace : Place;
@@ -366,9 +366,9 @@ export class FileParserService {
                         if (arcInscriptionElement && arcInscriptionElement.hasChildNodes()) {
                             const arcInscriptionChildren : Element[] = Array.from(arcInscriptionElement.children);
                             const arcInscriptionText : (Element | undefined) = arcInscriptionChildren.find(arcInscriptionChild => arcInscriptionChild.nodeName === "text");
-                            if (arcInscriptionText) {
+                            if (arcInscriptionText !== undefined) {
                                 const arcInscription : (string | null | undefined) = arcInscriptionText.textContent;
-                                if (arcInscription) {
+                                if ((arcInscription !== undefined) && (arcInscription !== null)) {
                                     arcWeight = parseInt(arcInscription);
                                 };
                             };
@@ -468,11 +468,11 @@ export class FileParserService {
                     throw new Error('could not parse source and target node information for arc with id \'' + arc + '\': expected 2 values, but got ' + idPair.length);
                 };
                 const arcSource : (Place | Transition | undefined) = nodeIdMap[idPair[0]];
-                if (!arcSource) {
+                if (arcSource === undefined) {
                     throw new Error('could not parse source node for arc with id \'' + arc + '\': unknown node id');
                 };
                 const arcTarget : (Place | Transition | undefined) = nodeIdMap[idPair[1]];
-                if (!arcTarget) {
+                if (arcTarget === undefined) {
                     throw new Error('could not parse target node for arc with id \'' + arc + '\': unknown node id');
                 };
                 let arcPlace : Place;
@@ -503,7 +503,7 @@ export class FileParserService {
             for (const elemId in jsonSoundSave.flag_marked) {
                 if (elemId.includes(',')) {
                     const elem : (Arc | undefined) = arcIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         savNet.markedArcs.push(elem);
                         elem.marked = true;
                     } else {
@@ -511,7 +511,7 @@ export class FileParserService {
                     };
                 } else {
                     const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         if (elem instanceof Place) {
                             savNet.markedPlaces.push(elem);
                             elem.marked = true;
@@ -527,7 +527,7 @@ export class FileParserService {
             for (const elemId in jsonSoundSave.flag_visited.log) {
                 if (elemId.includes(',')) {
                     const elem : (Arc | undefined) = arcIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         savNet.seqLogArcs.push(elem);
                         elem.inSequenceLog = true;
                     } else {
@@ -535,7 +535,7 @@ export class FileParserService {
                     };
                 } else {
                     const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         if (elem instanceof Place) {
                             savNet.seqLogPlaces.push(elem);
                             elem.inSequenceLog = true;
@@ -551,7 +551,7 @@ export class FileParserService {
             for (const elemId in jsonSoundSave.flag_visited.past) {
                 if (elemId.includes(',')) {
                     const elem : (Arc | undefined) = arcIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         savNet.seqPastArcs.push(elem);
                         elem.inSequencePast = true;
                     } else {
@@ -559,7 +559,7 @@ export class FileParserService {
                     };
                 } else {
                     const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         if (elem instanceof Place) {
                             savNet.seqPastPlaces.push(elem);
                             elem.inSequencePast = true;
@@ -575,7 +575,7 @@ export class FileParserService {
             for (const elemId in jsonSoundSave.flag_visited.next) {
                 if (elemId.includes(',')) {
                     const elem : (Arc | undefined) = arcIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         savNet.seqNextArcs.push(elem);
                         elem.inSequenceNext = true;
                     } else {
@@ -583,7 +583,7 @@ export class FileParserService {
                     };
                 } else {
                     const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         if (elem instanceof Place) {
                             savNet.seqNextPlaces.push(elem);
                             elem.inSequenceNext = true;
@@ -599,7 +599,7 @@ export class FileParserService {
             for (const elemId in jsonSoundSave.flag_error.one) {
                 if (elemId.includes(',')) {
                     const elem : (Arc | undefined) = arcIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         savNet.errLvl1Arcs.push(elem);
                         elem.errorLevel1 = true;
                     } else {
@@ -607,7 +607,7 @@ export class FileParserService {
                     };
                 } else {
                     const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         if (elem instanceof Place) {
                             savNet.errLvl1Places.push(elem);
                             elem.errorLevel1 = true;
@@ -623,7 +623,7 @@ export class FileParserService {
             for (const elemId in jsonSoundSave.flag_error.two) {
                 if (elemId.includes(',')) {
                     const elem : (Arc | undefined) = arcIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         savNet.errLvl2Arcs.push(elem);
                         elem.errorLevel2 = true;
                     } else {
@@ -631,7 +631,7 @@ export class FileParserService {
                     };
                 } else {
                     const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                    if (elem) {
+                    if (elem !== undefined) {
                         if (elem instanceof Place) {
                             savNet.errLvl2Places.push(elem);
                             elem.errorLevel2 = true;
@@ -654,7 +654,7 @@ export class FileParserService {
             for (const actEntry of jsonSoundSave.sequence_active) {
                 actIdx++;
                 const fired : (Place | Transition | undefined) = nodeIdMap[actEntry.fired];
-                if (fired) {
+                if (fired !== undefined) {
                     if (fired instanceof Place) {
                         throw new Error('could not parse active sequence entry \'' + actIdx + '\': fired transition id \'' + fired + '\' is a place id');
                     };
@@ -665,14 +665,14 @@ export class FileParserService {
                 for (const elemId of actEntry.added) {
                     if (elemId.includes(',')) {
                         const elem : (Arc | undefined) = arcIdMap[elemId];
-                        if (elem) {
+                        if (elem !== undefined) {
                             added.push(elem);
                         } else {
                             throw new Error('could not parse active sequence entry \'' + actIdx + '\': added element id \'' + elemId + '\' is not a known arc id');
                         };
                     } else {
                         const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                        if (elem) {
+                        if (elem !== undefined) {
                             added.push(elem);
                         } else {
                             throw new Error('could not parse active sequence entry \'' + actIdx + '\': added element id \'' + elemId + '\' is not a known node id');
@@ -698,7 +698,7 @@ export class FileParserService {
                     for (const seqEntry of logEntry) {
                         seqIdx++;
                         const fired : (Place | Transition | undefined) = nodeIdMap[seqEntry.fired];
-                        if (fired) {
+                        if (fired !== undefined) {
                             if (fired instanceof Place) {
                                 throw new Error('could not parse log sequence \'' + logIdx + '\', entry \'' + actIdx + '\': fired transition id \'' + fired + '\' is a place id');
                             };
@@ -709,14 +709,14 @@ export class FileParserService {
                         for (const elemId of seqEntry.added) {
                             if (elemId.includes(',')) {
                                 const elem : (Arc | undefined) = arcIdMap[elemId];
-                                if (elem) {
+                                if (elem !== undefined) {
                                     added.push(elem);
                                 } else {
                                     throw new Error('could not parse log sequence \'' + logIdx + '\', entry \'' + actIdx + '\': added element id \'' + elemId + '\' is not a known arc id');
                                 };
                             } else {
                                 const elem : (Place | Transition | undefined) = nodeIdMap[elemId];
-                                if (elem) {
+                                if (elem !== undefined) {
                                     added.push(elem);
                                 } else {
                                     throw new Error('could not parse log sequence \'' + logIdx + '\', entry \'' + actIdx + '\': added element id \'' + elemId + '\' is not a known node id');
@@ -734,12 +734,12 @@ export class FileParserService {
                     throw new Error('could not parse log sequence \'' + logIdx + '\': sequence has length \'' + logEntry.length + '\'');
                 };
             };
-            if (jsonSoundSave.sequences_completed) {
+            if (jsonSoundSave.sequences_completed !== undefined) {
                 savNet.completedSequences = jsonSoundSave.sequences_completed;
             } else {
                 throw new Error('could not parse number of completed sequences: field is undefined in sav');
             };
-            if (jsonSoundSave.errors) {
+            if (jsonSoundSave.errors !== undefined) {
                 savNet.errors = jsonSoundSave.errors;
             } else {
                 throw new Error('could not parse errors: field is undefined in sav');
@@ -869,11 +869,11 @@ export class FileParserService {
             };
             for (const arc of arcs) {
                 const arcSource : (Place | Transition | undefined) = nodeIdMap[arc[0]];
-                if (!arcSource) {
+                if (arcSource === undefined) {
                     throw new Error('invalid arc definition found in line ' + arc[3] + ': unknown source node id');
                 };
                 const arcTarget : (Place | Transition | undefined) = nodeIdMap[arc[1]];
-                if (!arcTarget) {
+                if (arcTarget === undefined) {
                     throw new Error('invalid arc definition found in line ' + arc[3] + ': unknown target node id');
                 };
                 let arcPlace : Place;

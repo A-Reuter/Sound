@@ -1,4 +1,5 @@
-import {Component, Input} from '@angular/core';
+import {Component, Inject, Input} from '@angular/core';
+import {APP_BASE_HREF} from '@angular/common';
 import {MatFabButton} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
@@ -28,7 +29,7 @@ export class ExampleFileComponent {
 
     /* methods - constructor */
 
-    constructor() {}
+    constructor(@Inject(APP_BASE_HREF) public baseHref: string) {}
 
     /* methods - getters */
 
@@ -72,7 +73,14 @@ export class ExampleFileComponent {
     public processDragEvent(inEvent: DragEvent) {
         this.dragInProgress = true;
         inEvent.dataTransfer!.effectAllowed = 'link';
-        inEvent.dataTransfer!.setData(ExampleFileComponent.META_DATA_CODE, this.link);
+        inEvent.dataTransfer!.setData(ExampleFileComponent.META_DATA_CODE, this.resolveLink(this.link));
+    };
+
+    private resolveLink(inLink : string) {
+        if (inLink.startsWith('http')) {
+            return inLink;
+        };
+        return (this.baseHref + inLink);
     };
 
 };

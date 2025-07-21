@@ -95,13 +95,17 @@ export class FileWriterService {
             placeCount++;
             const placeId : string = ('p' + placeCount);
             jpnPlaces.push(placeId);
+            // 
             // /* do not remove - alternative implementation (place labels are not part of the original definition of a JsonPetriNet) */
+            // 
             // if (place.label) {
             //     jpnLabels[placeId] = place.label;
             //     labelFound = true;
             // };
             jpnMarking[placeId] = place.initialMarking;
+            // 
             // /* do not remove - alternative implementation (saving current marking instead of initial marking) */
+            // 
             // jpnMarking[placeId] = place.marking
             jpnLayout[placeId] = {x: place.x, y: place.y};
             jsonNodeIds[place.id] = placeId;
@@ -155,7 +159,10 @@ export class FileWriterService {
                 arcCount = arcCount + arc.weight;
                 const arcId : string = (jsonNodeIds[arc.source.id] + ',' + jsonNodeIds[arc.target.id]);
                 jpnArcs[arcId] = arc.weight;
-                jpnLayout[arcId] = [{x: arc.source.x, y: arc.source.y}, {x: arc.target.x, y: arc.target.y}];
+                // 
+                // /* do not remove - alternative implementation (saving arc layout information) */
+                // 
+                // jpnLayout[arcId] = [{x: arc.source.x, y: arc.source.y}, {x: arc.target.x, y: arc.target.y}];
             };
         };
         if (arcCount !== inNet.arcCount) {
@@ -191,18 +198,14 @@ export class FileWriterService {
             placeString = (placeString + '    <place id="' + placeId + '">' + '\n');
             if (place.label) {
                 placeString = (placeString + '      <name>' + '\n');
-                placeString = (placeString + '        <text>' + '\n');
-                placeString = (placeString + '          ' + place.label + '\n');
-                placeString = (placeString + '        </text>' + '\n');
+                placeString = (placeString + '        <text>' + place.label + '</text>' + '\n');
                 placeString = (placeString + '      </name>' + '\n');
             };
             placeString = (placeString + '      <graphics>' + '\n');
             placeString = (placeString + '        <position x="' + place.x + '" y="' + place.y + '"/>' + '\n');
             placeString = (placeString + '      </graphics>' + '\n');
             placeString = (placeString + '      <initialMarking>' + '\n');
-            placeString = (placeString + '        <text>' + '\n');
-            placeString = (placeString + '          ' + place.initialMarking + '\n');
-            placeString = (placeString + '        </text>' + '\n');
+            placeString = (placeString + '        <text>' + place.initialMarking + '</text>' + '\n');
             placeString = (placeString + '      </initialMarking>' + '\n');
             placeString = (placeString + '    </place>' + '\n');
         };
@@ -214,9 +217,7 @@ export class FileWriterService {
             transitionString = (transitionString + '    <transition id="' + transitionId + '">' + '\n');
             if (transition.label) {
                 transitionString = (transitionString + '      <name>' + '\n');
-                transitionString = (transitionString + '        <text>' + '\n');
-                transitionString = (transitionString + '          ' + transition.label + '\n');
-                transitionString = (transitionString + '        </text>' + '\n');
+                transitionString = (transitionString + '        <text>' + transition.label + '</text>' + '\n');
                 transitionString = (transitionString + '      </name>' + '\n');
             };
             transitionString = (transitionString + '      <graphics>' + '\n');
@@ -263,9 +264,7 @@ export class FileWriterService {
                 arcCount = arcCount + arc.weight;
                 arcString = (arcString + '    <arc id="a' + arcNum + '" source="' + pnmlNodeIds[arc.source.id] + '" target="' + pnmlNodeIds[arc.target.id] + '">' + '\n');
                 arcString = (arcString + '      <inscription>' + '\n');
-                arcString = (arcString + '        <text>' + '\n');
-                arcString = (arcString + '          ' + arc.weight + '\n');
-                arcString = (arcString + '        </text>' + '\n');
+                arcString = (arcString + '        <text>' + arc.weight + '</text>' + '\n');
                 arcString = (arcString + '      </inscription>' + '\n');
                 arcString = (arcString + '    </arc>' + '\n');
             };

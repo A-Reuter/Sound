@@ -19,24 +19,29 @@ export const routes : Routes = [
         path: 'help', component: HelpComponent, 
         children : [
             {
-                path: '', redirectTo: 'reference', pathMatch: 'full'
+                path: '', redirectTo: 'guide', pathMatch: 'full'
             }, 
             {
-                path: 'overview', component: HelpOverviewComponent
+                path: 'info', component: HelpOverviewComponent
             }, 
             {
                 path: 'definitions', component: HelpDefinitionsComponent
             }, 
             {
-                path: 'reference', component: HelpReferenceComponent
+                path: 'guide', component: HelpReferenceComponent
             }, 
             {
                 path: 'controls', component: HelpControlsComponent
             }, 
             {
                 path: 'settings', component: HelpSettingsComponent
+            },
+            {
+                path: '**', redirectTo: 'guide'
             }
         ]
     },
-    
+    {
+        path: '**', redirectTo: 'tool'
+    }
 ];

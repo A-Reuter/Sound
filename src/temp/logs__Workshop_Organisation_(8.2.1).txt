@@ -1,1 +1,0 @@
-SetPc SetCfp + SuggestPc SetUpCfp SendInvites RecieveAnswers FinalizePc FinalizeCfp + SuggestPc SendInvites SetUpCfp RecieveAnswers FinalizePc FinalizeCfp + SuggestPc SendInvites RecieveAnswers SetUpCfp FinalizePc FinalizeCfp + SuggestPc SendInvites RecieveAnswers UpdateInvitees SendInvites RecieveAnswers FinalizePc SetUpCfp FinalizeCfp
